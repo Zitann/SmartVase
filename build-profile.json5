@@ -1,0 +1,49 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\jzita\\.ohos\\config\\auto_debug_outlier_detection_com.scu.outlier_detection_900086000032999485.cer",
+          "storePassword": "0000001BABACF1CB4E249A0F773EE823EBBC362D3D8AF8A48C0EA4FC188B599B54704C929F758A86A83B59",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BEE4CD717715FAF08FEB0CEB5C44F84F250FE115D07D1563E52DD142990F302929393CFBD347CF4",
+          "profile": "C:\\Users\\jzita\\.ohos\\config\\auto_debug_outlier_detection_com.scu.outlier_detection_900086000032999485.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\jzita\\.ohos\\config\\auto_debug_outlier_detection_com.scu.outlier_detection_900086000032999485.p12"
+        }
+      }
+    ],
+    "compileSdkVersion": 9,
+    "compatibleSdkVersion": 9,
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
