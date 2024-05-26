@@ -8,7 +8,7 @@ export default struct Plant{
     {
       name:"牡丹花",
       description:"牡丹花是一种被广泛栽培的花卉，是中国的传统名花之一。",
-      imageUrl:"$r('app.media.icon')",
+      imageUrl:"$r(app.media.flower)",
       temperature:25,humidity:50,luminance:1000,
       history:[
         {time:'2021-08-01',temperature:25,humidity:50,luminance:1000},
@@ -66,7 +66,7 @@ export default struct Plant{
   build(){
     Column(){
       Title({title:'植物列表'})
-      List({space:0}){
+      List({space:10}){
         ForEach(this.plants,(plant:any, index?:number)=>{
           ListItem(){
             this.item(plant)
@@ -78,6 +78,20 @@ export default struct Plant{
       .backgroundColor(Color.White)
       .border({radius:15})
       .margin({top:20})
+
+
+      Image($r("app.media.icon_add"))
+        .width(96)
+        .height(96)
+        .position({
+          x: '60%', y: '80%'
+        })
+        .onClick(() => {
+          // todo 点击按钮，跳转至新增页面
+          router.pushUrl({
+            url: 'pages/information'
+          })
+        })
     }
     .width('100%')
     .height('100%')
@@ -91,11 +105,22 @@ export default struct Plant{
     Row(){
       Text(patient.name)
         .width('17%')
+        .margin({
+          right:'5%'
+        })
       Text(patient.description)
+        .maxLines(2)
+        .textOverflow({
+          overflow: TextOverflow.Ellipsis
+        })
+        .width('70%')
     }
+    .backgroundImage($r('app.media.flower'))
     .width('100%')
     .padding('5%')
+    .height(100)
     .justifyContent(FlexAlign.SpaceBetween)
+    .borderRadius(12)
   }
 
   // 滑动删除和编辑的布局

@@ -2,8 +2,9 @@ import router from '@ohos.router';
 import Title from '../common/Title'
 import picker from '@ohos.file.picker';
 import promptAction from '@ohos.promptAction';
-
-
+import { historyT } from '../tabs/historyT';
+import { historyH } from '../tabs/historyH';
+import {historyI} from  '../tabs/historyI';
 @Entry
 @Component
 struct Information{
@@ -92,23 +93,56 @@ struct Information{
           Text('操作')
             .width('100%')
             .fontWeight(FontWeight.Bold)
-          if(this.edit) {
-            Button('保存')
-              .width(60)
+          Row() {
+            if (this.edit) {
+              Button('保存')
+                .fontSize(15)
+                .width(80)
+                .height(30)
+                .margin({ top: '3%',left:'15%' })
+                .onClick(() => {
+                  this.edit = false
+                })
+            } else {
+              Button('编辑')
+                .fontSize(15)
+                .width(80)
+                .height(30)
+                .margin({ top: '3%',left:'15%' })
+                .onClick(() => {
+                  this.edit = true
+                })
+            }
+            Blank()
+            Button('图片+')
+              .fontSize(15)
+              .width(80)
               .height(30)
-              .margin({ top: '3%' })
-              .onClick(() => {
-                this.edit = false
-              })
-          }else {
-            Button('编辑')
-              .width(60)
-              .height(30)
-              .margin({ top: '3%' })
-              .onClick(() => {
-                this.edit = true
-              })
+              .margin({ top: '3%',right:'15%' })
+
           }
+          .width('100%')
+          .height('5%')
+
+          Row() {
+              Button('设备')
+                .fontSize(15)
+                .width(80)
+                .height(30)
+                .margin({ top: '3%',left:'15%' })
+                .onClick(() => {
+                  this.edit = true
+                })
+            Blank()
+            Button('配网')
+              .fontSize(15)
+              .width(80)
+              .height(30)
+              .margin({ top: '3%',right:'15%' })
+
+          }
+          .width('100%')
+          .height('5%')
         }
         .width('90%')
         .backgroundColor(Color.White)
@@ -117,6 +151,107 @@ struct Information{
         .border({ radius: 15 })
         .alignItems(HorizontalAlign.End)
 
+        Column(){
+          Text('当前数据')
+            .width('100%')
+            .fontWeight(FontWeight.Bold)
+
+          Row(){
+            Column() {
+              Row() {
+                Text('温度')
+                  .fontColor(Color.Gray)
+                  .fontSize(17)
+                Image($r('app.media.ic_controlcenter_brightness_plus'))
+                  .width(20)
+                  .height(20)
+              }
+                .width('20%')
+                .margin({
+                  bottom:'5%'
+                })
+              Text(`${this.plant.temperature}`+" °")
+                .fontSize(25)
+                .width('20%')
+                .textAlign(TextAlign.Center)
+
+            }
+            .alignItems(HorizontalAlign.Start)
+            Column() {
+              Row() {
+                Text('湿度')
+                  .fontColor(Color.Gray)
+                  .fontSize(17)
+                Image($r('app.media.ic_controlcenter_brightness_plus'))
+                  .width(20)
+                  .height(20)
+              }
+              .width('20%')
+              .margin({
+                bottom:'5%'
+              })
+              Text(`${this.plant.humidity}`)
+                .fontSize(25)
+                .width('20%')
+                .textAlign(TextAlign.Center)
+
+            }
+            .alignItems(HorizontalAlign.Start)
+            Column() {
+              Row() {
+                Text('光照')
+                  .fontColor(Color.Gray)
+                  .fontSize(17)
+                Image($r('app.media.ic_controlcenter_brightness_plus'))
+                  .width(20)
+                  .height(20)
+              }
+              .width('20%')
+              .margin({
+                bottom:'5%'
+              })
+              Text(`${this.plant.luminance}`)
+                .fontSize(25)
+                .width('20%')
+                .textAlign(TextAlign.Center)
+
+            }
+            .alignItems(HorizontalAlign.Start)
+          }
+          .width('100%')
+          .justifyContent(FlexAlign.SpaceBetween)
+          .margin({
+            top:'7%'
+          })
+        }
+        .width('90%')
+        .backgroundColor(Color.White)
+        .margin({ top: '5%' })
+        .padding('5%')
+        .border({ radius: 15 })
+        .alignItems(HorizontalAlign.End)
+
+
+
+
+        Column() {
+          Text('历史数据')
+            .width('100%')
+            .fontWeight(FontWeight.Bold)
+
+          Swiper(){
+            historyT({plant:$plant})
+            historyH({plant:$plant})
+            historyI({plant:$plant})
+          }
+
+          //history({ plant: $plant })
+        }.width('90%')
+        .backgroundColor(Color.White)
+        .margin({ top: '5%' })
+        .padding('5%')
+        .border({ radius: 15 })
+        .alignItems(HorizontalAlign.End)
       }
       .width('100%')
       .height('100%')
