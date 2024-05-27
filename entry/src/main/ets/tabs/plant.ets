@@ -119,6 +119,7 @@ export default struct Plant{
         .width('70%')
     }
     .backgroundImage($r('app.media.flower'))
+    .backgroundImageSize(ImageSize.Cover)
     .width('100%')
     .padding('5%')
     .height(100)

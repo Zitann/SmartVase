@@ -5,9 +5,115 @@ import promptAction from '@ohos.promptAction';
 import { historyT } from '../tabs/historyT';
 import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
+import BLE from '../common/BLE'
+import wifi from '@ohos.wifi';
+
+@CustomDialog
+struct Dialog {
+  controller: CustomDialogController
+  // 双向绑定传值
+  @Link ssid: string
+  @Link password: string
+  ble: BLE
+  // 弹窗控制器，控制打开/关闭，必须传入，且名称必须为：controller
+
+  // 弹窗中的按钮事件
+  cancel: () => void
+  confirm: () => void
+
+  // 弹窗中的内容描述
+  build() {
+    Column() {
+      Text("请输入WIFI密码")
+        .fontSize(20).margin({ top: 10, bottom: 10 })
+        .textAlign(TextAlign.Center)
+        .width("100%")
+      TextInput({
+        placeholder: 'SSID',
+        text: this.ssid
+      })
+        .width('80%')
+        .onChange((value: string) => {
+          this.ssid = value
+        })
+      TextInput({
+        placeholder: 'Password',
+        text: this.password
+      })
+        .width('80%')
+        .onChange((value: string) => {
+          this.password = value
+        })
+        .margin({top: 10, bottom: 10})
+      Flex({ justifyContent: FlexAlign.SpaceAround }) {
+        Button('取消')
+          .onClick(() => {
+            this.controller.close()
+          }).backgroundColor(0xffffff).fontColor(Color.Black).width('25%')
+        Button('确定')
+          .onClick(() => {
+            this.ble.SendData(this.ssid+','+this.password)
+            this.controller.close()
+          }).backgroundColor(0xffffff).fontColor(Color.Red).width('25%')
+      }.margin({ bottom: 10 })
+    }
+  }
+}
+
+@CustomDialog
+struct Dialog2 {
+  controller: CustomDialogController
+  @Link val: string
+  confirm: (val:string)=>void
+  ble: BLE
+  build() {
+    Column() {
+      Text('请输入MAC地址').fontSize(20).margin({ top: 10, bottom: 10 })
+      TextInput({text:this.val})
+        .width('80%')
+        .onChange((value)=>{
+          this.val = value
+        })
+      Flex({ justifyContent: FlexAlign.SpaceAround }) {
+        Button('取消')
+          .onClick(() => {
+            this.controller.close()
+          }).backgroundColor(0xffffff).fontColor(Color.Black)
+        Button('确认')
+          .onClick(() => {
+            console.log('jzt '+this.val.replace("MAC ", ""))
+            this.ble.Connect(this.val.replace("MAC ", ""))
+            this.controller.close()
+          }).backgroundColor(0xffffff).fontColor(Color.Red)
+      }.margin({ bottom: 10 })
+    }
+  }
+}
+
 @Entry
 @Component
 struct Information{
+  @State ssid: string = ''
+  @State password: string = ''
+  @State mac: string = ''
+  context = getContext(this)
+  ble = new BLE()
+
+  dialogController: CustomDialogController = new CustomDialogController({
+    builder: Dialog({
+      ssid: $ssid,
+      password: $password,
+      ble: this.ble
+    }),
+    alignment: DialogAlignment.Center,
+  })
+  dialogController2: CustomDialogController = new CustomDialogController({
+    builder: Dialog2({
+      val: $mac,
+      ble: this.ble
+    }),
+    alignment: DialogAlignment.Center,
+  })
   @State edit:boolean = false
   @State plant :{name:string,description:string,imageUrl:string,temperature:number,humidity:number,luminance:number,history:{time:string,temperature:number,humidity:number,luminance:number}[]}=
     {
@@ -40,6 +146,9 @@ struct Information{
     }
   index: number
 
+  onPageShow(): void {
+    this.ble.Check()
+  }
   // 选择图片
   getPhotoImg() {
     let photoPicker = new picker.PhotoViewPicker();
@@ -92,6 +201,7 @@ struct Information{
         .padding('5%')
         .border({ radius: 15 })
         .backgroundImage($r('app.media.flower'))
+        .backgroundImageSize(ImageSize.Cover)
 
         Column() {
           Text('操作')
@@ -135,6 +245,9 @@ struct Information{
                 .height(30)
                 .margin({ top: '3%',left:'15%' })
                 .onClick(() => {
+                  this.ble.GotoScanner(this.context)
+                  // // this.ble.Connect("EC:64:C9:86:51:EA")
+                  this.dialogController2.open()
                 })
             Blank()
             Button('配网')
@@ -143,6 +256,10 @@ struct Information{
               .height(30)
               .margin({ top: '3%',right:'15%' })
               .onClick(() => {
+                wifi.getLinkedInfo().then((info) => {
+                  this.ssid = info['ssid'].replace('"', '').replace('"', '')
+                  this.dialogController.open()
+                })
               })
           }
           .width('100%')
