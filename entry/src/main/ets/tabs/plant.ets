@@ -78,13 +78,14 @@ export default struct Plant{
       .backgroundColor(Color.White)
       .border({radius:15})
       .margin({top:20})
+      .padding(10)
 
 
-      Image($r("app.media.icon_add"))
-        .width(96)
-        .height(96)
+      Image($r('app.media.ic_public_list_add_light'))
+        .width(64)
+        .height(64)
         .position({
-          x: '60%', y: '80%'
+          x: '70%', y: '80%'
         })
         .onClick(() => {
           // todo 点击按钮，跳转至新增页面
@@ -104,12 +105,14 @@ export default struct Plant{
   @Builder item(patient:{name:string,description:string,imageUrl:string,temperature:number,humidity:number,luminance:number,history:{time:string,temperature:number,humidity:number,luminance:number}[]}){
     Row(){
       Text(patient.name)
-        .width('17%')
+        .fontColor(Color.White)
+        .width('30%')
         .margin({
           right:'5%'
         })
       Text(patient.description)
         .maxLines(2)
+        .fontColor(Color.White)
         .textOverflow({
           overflow: TextOverflow.Ellipsis
         })

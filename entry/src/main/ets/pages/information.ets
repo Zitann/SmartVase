@@ -64,12 +64,15 @@ struct Information{
           {
             TextInput({text: this.plant.name})
               .fontSize(20)
+              .fontColor(Color.Black)
+              .backgroundColor(Color.White)
               .onChange((text) => {
                 this.plant.name = text
               })
             TextInput({text: this.plant.description})
               .fontSize(15)
-              .fontColor(Color.Gray)
+              .fontColor(Color.Black)
+              .backgroundColor(Color.White)
               .margin({ top: '3%' })
               .onChange((text) => {
                 this.plant.description = text
@@ -77,17 +80,18 @@ struct Information{
           }else{
             Text(this.plant.name)
               .fontSize(20)
+              .fontColor(Color.White)
             Text(this.plant.description)
               .fontSize(15)
-              .fontColor(Color.Gray)
+              .fontColor("#E1E3E5")
               .margin({ top: '3%' })
           }
         }
         .width('90%')
-        .backgroundColor(Color.White)
         .margin({ top: '5%' })
         .padding('5%')
         .border({ radius: 15 })
+        .backgroundImage($r('app.media.flower'))
 
         Column() {
           Text('操作')
@@ -131,7 +135,6 @@ struct Information{
                 .height(30)
                 .margin({ top: '3%',left:'15%' })
                 .onClick(() => {
-                  this.edit = true
                 })
             Blank()
             Button('配网')
@@ -139,7 +142,8 @@ struct Information{
               .width(80)
               .height(30)
               .margin({ top: '3%',right:'15%' })
-
+              .onClick(() => {
+              })
           }
           .width('100%')
           .height('5%')
@@ -158,31 +162,15 @@ struct Information{
 
           Row(){
             Column() {
-              Row() {
-                Text('温度')
-                  .fontColor(Color.Gray)
-                  .fontSize(17)
-                Image($r('app.media.ic_controlcenter_brightness_plus'))
-                  .width(20)
-                  .height(20)
-              }
-                .width('20%')
-                .margin({
-                  bottom:'5%'
-                })
               Text(`${this.plant.temperature}`+" °")
                 .fontSize(25)
                 .width('20%')
                 .textAlign(TextAlign.Center)
-
-            }
-            .alignItems(HorizontalAlign.Start)
-            Column() {
               Row() {
-                Text('湿度')
+                Text('温度')
                   .fontColor(Color.Gray)
                   .fontSize(17)
-                Image($r('app.media.ic_controlcenter_brightness_plus'))
+                Image($r('app.media.ic_temperature'))
                   .width(20)
                   .height(20)
               }
@@ -190,14 +178,32 @@ struct Information{
               .margin({
                 bottom:'5%'
               })
+            }
+            .alignItems(HorizontalAlign.Start)
+            Column() {
               Text(`${this.plant.humidity}`)
                 .fontSize(25)
                 .width('20%')
                 .textAlign(TextAlign.Center)
-
+              Row() {
+                Text('湿度')
+                  .fontColor(Color.Gray)
+                  .fontSize(17)
+                Image($r('app.media.ic_humidity'))
+                  .width(20)
+                  .height(20)
+              }
+              .width('20%')
+              .margin({
+                bottom:'5%'
+              })
             }
             .alignItems(HorizontalAlign.Start)
             Column() {
+              Text(`${this.plant.luminance}`)
+                .fontSize(25)
+                .width('20%')
+                .textAlign(TextAlign.Center)
               Row() {
                 Text('光照')
                   .fontColor(Color.Gray)
@@ -210,11 +216,6 @@ struct Information{
               .margin({
                 bottom:'5%'
               })
-              Text(`${this.plant.luminance}`)
-                .fontSize(25)
-                .width('20%')
-                .textAlign(TextAlign.Center)
-
             }
             .alignItems(HorizontalAlign.Start)
           }
@@ -230,9 +231,6 @@ struct Information{
         .padding('5%')
         .border({ radius: 15 })
         .alignItems(HorizontalAlign.End)
-
-
-
 
         Column() {
           Text('历史数据')

@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\jzita\\.ohos\\config\\auto_debug_outlier_detection_com.scu.outlier_detection_900086000032999485.cer",
-          "storePassword": "0000001BABACF1CB4E249A0F773EE823EBBC362D3D8AF8A48C0EA4FC188B599B54704C929F758A86A83B59",
+          "certpath": "C:\\Users\\jzita\\.ohos\\config\\default_SmartVase_gDBGUh2PnkGZy89OPqBkHRosHonVEIOzZhgeWa_hh1M=.cer",
+          "storePassword": "0000001BE2910296947FE823DFE76809BBCBF319EBF016F1C99CE1FFBCE7A8BCB7877E804E5FA3E1720876",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BEE4CD717715FAF08FEB0CEB5C44F84F250FE115D07D1563E52DD142990F302929393CFBD347CF4",
-          "profile": "C:\\Users\\jzita\\.ohos\\config\\auto_debug_outlier_detection_com.scu.outlier_detection_900086000032999485.p7b",
+          "keyPassword": "0000001B3FC6D333B4C0475244DE76B06D2243704F76B6995E3E58DF71AF84861455D80B1A507326B70E12",
+          "profile": "C:\\Users\\jzita\\.ohos\\config\\default_SmartVase_gDBGUh2PnkGZy89OPqBkHRosHonVEIOzZhgeWa_hh1M=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\jzita\\.ohos\\config\\auto_debug_outlier_detection_com.scu.outlier_detection_900086000032999485.p12"
+          "storeFile": "C:\\Users\\jzita\\.ohos\\config\\default_SmartVase_gDBGUh2PnkGZy89OPqBkHRosHonVEIOzZhgeWa_hh1M=.p12"
         }
       }
     ],
