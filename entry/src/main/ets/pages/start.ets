@@ -1,4 +1,6 @@
 import router from '@ohos.router';
+import dataPreferences from '@ohos.data.preferences';
+import {User} from '../common/Data';
 
 @Entry
 @Component
@@ -9,14 +11,23 @@ struct Start {
 
   onPageShow(){
     this.initConstants()
-    if(!this.login) {
-      setTimeout(() => {
-        router.replaceUrl({ url: 'pages/login' })
-      }, 1000)
-    }else{
-      setTimeout(() => {
-        router.replaceUrl({ url: 'pages/home' })
-      }, 1000)
+    try{
+      dataPreferences.getPreferences(getContext(this),'SmartVase').then((preferences) => {
+        preferences.get('login',false).then((value) => {
+          this.login = value as boolean
+          if(!this.login) {
+            setTimeout(() => {
+              router.replaceUrl({ url: 'pages/login' })
+            }, 1000)
+          }else{
+            setTimeout(() => {
+              router.replaceUrl({ url: 'pages/home' })
+            }, 1000)
+          }
+        })
+      })
+    }catch (e) {
+      console.error('getPreferences error:', e)
     }
   }
 
