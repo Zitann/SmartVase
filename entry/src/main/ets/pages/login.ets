@@ -77,7 +77,7 @@ struct Login{
         .width('50%')
         .margin({top:'10%'})
         .onClick(()=>{
-          this.httpRequest.request('http://10.134.50.20:2013/user/login',{
+          this.httpRequest.request('http://10.134.176.130:2013/user/login',{
             method:http.RequestMethod.POST,
             extraData:{
               phone:this.phone.toString(),

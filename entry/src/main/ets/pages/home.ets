@@ -1,14 +1,21 @@
 import Plant from '../tabs/plant'
 import Account from '../tabs/account'
+import { User } from '../common/Data'
+import router from '@ohos.router';
+import dataPreferences from '@ohos.data.preferences';
 
 @Entry
 @Component
 struct Home{
   // 当前活动页面
   @State currentIndex: number = 0
+  @State user: User = null
   // 控制器
   private controller: TabsController = new TabsController()
 
+  onPageShow(): void {
+    this.user = router.getParams() as User
+  }
   // 两个页面在tabs文件夹中
   build(){
     Column(){
@@ -16,9 +23,9 @@ struct Home{
         TabContent(){
           Plant()
         }
-        .tabBar(this.TabBuilder(0,'植物',$r('app.media.ic_contacts_medication_status_precautions')))
+        .tabBar(this.TabBuilder(0,'植物',$r('app.media.plant')))
         TabContent(){
-          Account()
+          Account({user:this.user})
         }
         .tabBar(this.TabBuilder(1,'我的',$r('app.media.ic_user_portrait')))
       }

@@ -21,6 +21,7 @@ struct Start {
           }else{
             preferences.get('user',null).then((value) => {
               let user = JSON.parse(value as string) as User
+              console.info('user:',JSON.stringify(user))
               setTimeout(() => {
                 router.replaceUrl({ url: 'pages/home' ,params:user})
               }, 1000)

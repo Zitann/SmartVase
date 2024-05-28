@@ -1,11 +1,11 @@
 export class User{
-  userNames: string;
+  userName: string;
   phone: string;
   avatarUrl : string;
   token: string;
 
-  constructor(userNames: string = 'Narrao', phone: string = '', avatarUrl: string='', token: string='') {
-    this.userNames = userNames;
+  constructor(userName: string = 'Narrao', phone: string = '', avatarUrl: string='', token: string='') {
+    this.userName = userName;
     this.phone = phone;
     this.avatarUrl = avatarUrl;
     this.token = token;
