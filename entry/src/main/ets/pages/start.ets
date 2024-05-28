@@ -1,28 +1,30 @@
 import router from '@ohos.router';
 import dataPreferences from '@ohos.data.preferences';
-import {User} from '../common/Data';
+import { User } from '../common/Data';
+import promptAction from '@ohos.promptAction';
 
 @Entry
 @Component
 struct Start {
-  login:boolean = false
   appName: string = '云瓶'
   inf: string = 'Smart Vase'
 
   onPageShow(){
     this.initConstants()
     try{
-      dataPreferences.getPreferences(getContext(this),'SmartVase').then((preferences) => {
-        preferences.get('login',false).then((value) => {
-          this.login = value as boolean
-          if(!this.login) {
+      dataPreferences.getPreferences(globalThis.context,'SmartVase').then((preferences) => {
+        preferences.has('user').then((value) => {
+          if(value == false){
             setTimeout(() => {
               router.replaceUrl({ url: 'pages/login' })
             }, 1000)
           }else{
-            setTimeout(() => {
-              router.replaceUrl({ url: 'pages/home' })
-            }, 1000)
+            preferences.get('user',null).then((value) => {
+              let user = JSON.parse(value as string) as User
+              setTimeout(() => {
+                router.replaceUrl({ url: 'pages/home' ,params:user})
+              }, 1000)
+            })
           }
         })
       })

@@ -1,5 +1,6 @@
 import Title from '../common/Title'
 import router from '@ohos.router'
+import dataPreferences from '@ohos.data.preferences';
 
 @CustomDialog
 struct Dialog {
@@ -148,7 +149,19 @@ export default struct Account{
         .margin({ top: '80%' })
         .backgroundColor(Color.Red)
         .onClick(() => {
-          router.replaceUrl({ url: 'pages/login'})
+          dataPreferences.getPreferences(globalThis.context,'SmartVase').then((preferences) => {
+            preferences.clear().then((result) => {
+              console.info('清除成功')
+              preferences.flush().then((result) => {
+                console.info('flush成功')
+                router.replaceUrl({ url: 'pages/login'})
+              }).catch((error) => {
+                console.info('flush失败')
+              })
+            }).catch((error) => {
+              console.info('清除失败')
+            })
+          })
         })
     }
     .width('100%')

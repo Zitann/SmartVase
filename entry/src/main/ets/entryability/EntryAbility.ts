@@ -40,6 +40,7 @@ export default class EntryAbility extends UIAbility {
 
       windowClass.setWindowLayoutFullScreen(true)
     });
+    globalThis.context = this.context;
     windowStage.loadContent('pages/start', (err, data) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');

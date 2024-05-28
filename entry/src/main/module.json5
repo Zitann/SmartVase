@@ -48,6 +48,9 @@
       },
       {
         "name": 'ohos.permission.GET_WIFI_INFO'
+      },
+      {
+        "name": 'ohos.permission.INTERNET'
       }
     ]
   }
