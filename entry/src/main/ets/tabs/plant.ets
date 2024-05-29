@@ -37,7 +37,8 @@ export default struct Plant{
         .onClick(() => {
           // todo 点击按钮，跳转至新增页面
           router.pushUrl({
-            url: 'pages/information'
+            url: 'pages/addPlant',
+            params: {token:this.token}
           })
         })
     }

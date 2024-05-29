@@ -4,6 +4,7 @@
     "pages/login",
     "pages/home",
     "pages/information",
-    "pages/register"
+    "pages/register",
+    "pages/addPlant"
   ]
 }

@@ -5,120 +5,15 @@ import promptAction from '@ohos.promptAction';
 import { historyT } from '../tabs/historyT';
 import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
-import BLE from '../common/BLE'
-import wifi from '@ohos.wifi';
 import { History, PlantData } from '../common/Data';
 import http from '@ohos.net.http';
-
-@CustomDialog
-struct Dialog {
-  controller: CustomDialogController
-  // 双向绑定传值
-  @Link ssid: string
-  @Link password: string
-  ble: BLE
-  // 弹窗控制器，控制打开/关闭，必须传入，且名称必须为：controller
-
-  // 弹窗中的按钮事件
-  cancel: () => void
-  confirm: () => void
-
-  // 弹窗中的内容描述
-  build() {
-    Column() {
-      Text("请输入WIFI密码")
-        .fontSize(20).margin({ top: 10, bottom: 10 })
-        .textAlign(TextAlign.Center)
-        .width("100%")
-      TextInput({
-        placeholder: 'SSID',
-        text: this.ssid
-      })
-        .width('80%')
-        .onChange((value: string) => {
-          this.ssid = value
-        })
-      TextInput({
-        placeholder: 'Password',
-        text: this.password
-      })
-        .width('80%')
-        .onChange((value: string) => {
-          this.password = value
-        })
-        .margin({top: 10, bottom: 10})
-      Flex({ justifyContent: FlexAlign.SpaceAround }) {
-        Button('取消')
-          .onClick(() => {
-            this.controller.close()
-          }).backgroundColor(0xffffff).fontColor(Color.Black).width('25%')
-        Button('确定')
-          .onClick(() => {
-            this.ble.SendData(this.ssid+','+this.password)
-            this.controller.close()
-          }).backgroundColor(0xffffff).fontColor(Color.Red).width('25%')
-      }.margin({ bottom: 10 })
-    }
-  }
-}
-
-@CustomDialog
-struct Dialog2 {
-  controller: CustomDialogController
-  @Link val: string
-  confirm: (val:string)=>void
-  ble: BLE
-  build() {
-    Column() {
-      Text('请输入MAC地址').fontSize(20).margin({ top: 10, bottom: 10 })
-      TextInput({text:this.val})
-        .width('80%')
-        .onChange((value)=>{
-          this.val = value
-        })
-      Flex({ justifyContent: FlexAlign.SpaceAround }) {
-        Button('取消')
-          .onClick(() => {
-            this.controller.close()
-          }).backgroundColor(0xffffff).fontColor(Color.Black)
-        Button('确认')
-          .onClick(() => {
-            console.log('jzt '+this.val.replace("MAC ", ""))
-            this.ble.Connect(this.val.replace("MAC ", ""))
-            this.controller.close()
-          }).backgroundColor(0xffffff).fontColor(Color.Red)
-      }.margin({ bottom: 10 })
-    }
-  }
-}
 
 @Entry
 @Component
 struct Information{
-  @State ssid: string = ''
-  @State password: string = ''
-  @State mac: string = ''
   @State name: string = ''
   @State description: string = ''
-  context = getContext(this)
-  ble = new BLE()
   httpRequest:http.HttpRequest = http.createHttp();
-
-  dialogController: CustomDialogController = new CustomDialogController({
-    builder: Dialog({
-      ssid: $ssid,
-      password: $password,
-      ble: this.ble
-    }),
-    alignment: DialogAlignment.Center,
-  })
-  dialogController2: CustomDialogController = new CustomDialogController({
-    builder: Dialog2({
-      val: $mac,
-      ble: this.ble
-    }),
-    alignment: DialogAlignment.Center,
-  })
   @State edit:boolean = false
   @State plant :PlantData = new PlantData()
   @State histories:History[] = []
@@ -235,7 +130,6 @@ struct Information{
       this.getHistory()
     },60000)
     console.log(JSON.stringify(this.plant))
-    this.ble.Check()
   }
 
   onPageHide(): void {
@@ -327,33 +221,6 @@ struct Information{
               .height(30)
               .margin({ top: '3%',right:'15%' })
 
-          }
-          .width('100%')
-          .height('5%')
-
-          Row() {
-              Button('设备')
-                .fontSize(15)
-                .width(80)
-                .height(30)
-                .margin({ top: '3%',left:'15%' })
-                .onClick(() => {
-                  this.ble.GotoScanner(this.context)
-                  // // this.ble.Connect("EC:64:C9:86:51:EA")
-                  this.dialogController2.open()
-                })
-            Blank()
-            Button('配网')
-              .fontSize(15)
-              .width(80)
-              .height(30)
-              .margin({ top: '3%',right:'15%' })
-              .onClick(() => {
-                wifi.getLinkedInfo().then((info) => {
-                  this.ssid = info['ssid'].replace('"', '').replace('"', '')
-                  this.dialogController.open()
-                })
-              })
           }
           .width('100%')
           .height('5%')
@@ -453,11 +320,11 @@ struct Information{
             .width('100%')
             .fontWeight(FontWeight.Bold)
 
-          // Swiper(){
-          //   historyT({histories:globalThis.histories})
-          //   historyH({histories:globalThis.histories})
-          //   historyI({histories:globalThis.histories})
-          // }
+          Swiper(){
+            historyT({histories: this.histories})
+            historyH({histories: this.histories})
+            historyI({histories: this.histories})
+          }
 
           //history({ plant: $plant })
         }.width('90%')
