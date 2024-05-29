@@ -7,7 +7,7 @@ import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
 import BLE from '../common/BLE'
 import wifi from '@ohos.wifi';
-import { PlantData } from '../common/Data';
+import { History, PlantData } from '../common/Data';
 import http from '@ohos.net.http';
 
 @CustomDialog
@@ -98,6 +98,8 @@ struct Information{
   @State ssid: string = ''
   @State password: string = ''
   @State mac: string = ''
+  @State name: string = ''
+  @State description: string = ''
   context = getContext(this)
   ble = new BLE()
   httpRequest:http.HttpRequest = http.createHttp();
@@ -119,13 +121,16 @@ struct Information{
   })
   @State edit:boolean = false
   @State plant :PlantData = new PlantData()
+  @State histories:History[] = []
   token = ''
+  plantId=''
   timeId = 0
 
-  getPlant(index:number){
-    this.httpRequest.request("http://10.134.48.122:2013/plant/list",{
+  getPlant(){
+    this.httpRequest.request(`http://123.60.145.37:5000/plant/info?id=${this.plantId}`,{
       method:http.RequestMethod.GET,
       header: {
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${this.token}`
       }
     },(err,data)=>{
@@ -136,7 +141,83 @@ struct Information{
       }else{
         let dataObj = JSON.parse(data.result as string)
         if(dataObj.code == 'SUCCESS') {
-          this.plant = new PlantData(dataObj.data[index].name,dataObj.data[index].description,dataObj.data[index].image,dataObj.data[index].temperature,dataObj.data[index].humidity,dataObj.data[index].luminance)
+          // console.log(JSON.stringify(dataObj.data))
+          this.plant = new PlantData(dataObj.data.id,dataObj.data.name,dataObj.data.description,dataObj.data.image,dataObj.data.temperature,dataObj.data.humidity,dataObj.data.luminance)
+          if(this.name == ''){
+            this.name = this.plant.name
+          }
+          if(this.description == ''){
+            this.description = this.plant.description
+          }
+        }else{
+          promptAction.showToast({ message: '获取植物 '+dataObj.message })
+        }
+      }
+    })
+  }
+
+  getHistory(){
+    this.httpRequest.request(`http://123.60.145.37:5000/history/data?id=${this.plantId}`,{
+      method:http.RequestMethod.GET,
+      header: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${this.token}`
+      }
+    },(err,data)=>{
+      if(err){
+        promptAction.showToast({ message: '网络错误' })
+        promptAction.showToast({ message: err.message })
+        return
+      }else{
+        let dataObj = JSON.parse(data.result as string)
+        if(dataObj.code == 'SUCCESS') {
+          // console.log(JSON.stringify(dataObj.data))
+          this.histories = []
+          for(let history of dataObj.data){
+            this.histories.push(new History(history.time,history.temperature,history.humidity,history.luminance))
+          }
+          if(this.histories.length == 0){
+            return
+          }
+          this.plant.temperature = this.histories[this.histories.length-1].temperature
+          this.plant.humidity = this.histories[this.histories.length-1].humidity
+          this.plant.luminance = this.histories[this.histories.length-1].luminance
+          console.log('history'+JSON.stringify(this.histories))
+        }else{
+          promptAction.showToast({ message: '获取植物 '+dataObj.message })
+        }
+      }
+    })
+  }
+
+  savePlant() {
+    this.httpRequest.request(`http://123.60.145.37:5000/plant/info`,{
+      method:http.RequestMethod.PUT,
+      header: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${this.token}`
+      },
+      extraData:{
+        "id":this.plantId,
+        "name":this.name,
+        "description":this.description,
+      }
+    },(err,data)=>{
+      if(err){
+        promptAction.showToast({ message: '网络错误' })
+        promptAction.showToast({ message: err.message })
+        return
+      }else{
+        let dataObj = JSON.parse(data.result as string)
+        if(dataObj.code == 'SUCCESS') {
+          // console.log(JSON.stringify(dataObj.data))
+          this.plant = new PlantData(dataObj.data.id,dataObj.data.name,dataObj.data.description,dataObj.data.image,dataObj.data.temperature,dataObj.data.humidity,dataObj.data.luminance)
+          if(this.name == ''){
+            this.name = this.plant.name
+          }
+          if(this.description == ''){
+            this.description = this.plant.description
+          }
         }else{
           promptAction.showToast({ message: '获取植物 '+dataObj.message })
         }
@@ -145,14 +226,14 @@ struct Information{
   }
 
   onPageShow(): void {
-    let data = router.getParams() as {index:number,token:string}
+    let data = router.getParams() as {id:string,token:string}
     this.token = data.token
-    let index = data.index
-    this.getPlant(index)
+    this.plantId = data.id
+    this.getPlant()
+    this.getHistory()
     this.timeId=setInterval(()=>{
-      this.getPlant(index)
-      console.log(JSON.stringify(this.plant))
-    },1000)
+      this.getHistory()
+    },60000)
     console.log(JSON.stringify(this.plant))
     this.ble.Check()
   }
@@ -182,26 +263,26 @@ struct Information{
         Column() {
           if(this.edit)
           {
-            TextInput({text: this.plant.name})
+            TextInput({text: this.name})
               .fontSize(20)
               .fontColor(Color.Black)
               .backgroundColor(Color.White)
               .onChange((text) => {
-                this.plant.name = text
+                this.name = text
               })
-            TextInput({text: this.plant.description})
+            TextInput({text: this.description})
               .fontSize(15)
               .fontColor(Color.Black)
               .backgroundColor(Color.White)
               .margin({ top: '3%' })
               .onChange((text) => {
-                this.plant.description = text
+                this.description = text
               })
           }else{
-            Text(this.plant.name)
+            Text(this.name)
               .fontSize(20)
               .fontColor(Color.White)
-            Text(this.plant.description)
+            Text(this.description)
               .fontSize(15)
               .fontColor("#E1E3E5")
               .margin({ top: '3%' })
@@ -227,6 +308,7 @@ struct Information{
                 .margin({ top: '3%',left:'15%' })
                 .onClick(() => {
                   this.edit = false
+                  this.savePlant()
                 })
             } else {
               Button('编辑')
@@ -297,17 +379,19 @@ struct Information{
               Row() {
                 Text('温度')
                   .fontColor(Color.Gray)
-                  .fontSize(17)
+                  .fontSize(12)
                 Image($r('app.media.ic_temperature'))
-                  .width(20)
-                  .height(20)
+                  .width(12)
+                  .height(12)
               }
               .width('20%')
               .margin({
                 bottom:'5%'
               })
+              .justifyContent(FlexAlign.Center)
             }
-            .alignItems(HorizontalAlign.Start)
+            .alignItems(HorizontalAlign.Center)
+            .justifyContent(FlexAlign.Center)
             Column() {
               Text(`${this.plant.humidity??"null"}`)
                 .fontSize(25)
@@ -316,17 +400,19 @@ struct Information{
               Row() {
                 Text('湿度')
                   .fontColor(Color.Gray)
-                  .fontSize(17)
+                  .fontSize(12)
                 Image($r('app.media.ic_humidity'))
-                  .width(20)
-                  .height(20)
+                  .width(12)
+                  .height(12)
               }
               .width('20%')
               .margin({
                 bottom:'5%'
               })
+              .justifyContent(FlexAlign.Center)
             }
-            .alignItems(HorizontalAlign.Start)
+            .alignItems(HorizontalAlign.Center)
+            .justifyContent(FlexAlign.Center)
             Column() {
               Text(`${this.plant.luminance??"null"}`)
                 .fontSize(25)
@@ -335,17 +421,19 @@ struct Information{
               Row() {
                 Text('光照')
                   .fontColor(Color.Gray)
-                  .fontSize(17)
+                  .fontSize(12)
                 Image($r('app.media.ic_controlcenter_brightness_plus'))
-                  .width(20)
-                  .height(20)
+                  .width(12)
+                  .height(12)
               }
               .width('20%')
               .margin({
                 bottom:'5%'
               })
+              .justifyContent(FlexAlign.Center)
             }
-            .alignItems(HorizontalAlign.Start)
+            .alignItems(HorizontalAlign.Center)
+            .justifyContent(FlexAlign.Center)
           }
           .width('100%')
           .justifyContent(FlexAlign.SpaceBetween)

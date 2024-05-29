@@ -1,11 +1,14 @@
 import Title from '../common/Title'
 import router from '@ohos.router';
 import { PlantData } from '../common/Data';
+import http from '@ohos.net.http';
+import promptAction from '@ohos.promptAction';
 
 @Component
 export default struct Plant{
   @Link plants:PlantData[]
   token:string = ''
+  httpRequest:http.HttpRequest = http.createHttp();
 
   build(){
     Column(){
@@ -84,7 +87,7 @@ export default struct Plant{
         .margin(4)
         .onClick(()=>{
           console.info('Click Icon')
-          router.pushUrl({url:'pages/information',params:{index:index,token:this.token}})
+          router.pushUrl({url:'pages/information',params:{id:this.plants[index].id,token:this.token}})
         })
       Button(){
         Image($r("app.media.ic_public_delete_filled"))
@@ -97,6 +100,26 @@ export default struct Plant{
       .backgroundColor(Color.Red)
         .onClick(()=>{
           console.info(index.toString())
+          this.httpRequest.request(`http://123.60.145.37:5000/plant/info?id=${this.plants[index].id}`,{
+            method:http.RequestMethod.DELETE,
+            header: {
+              "Authorization": `Bearer ${this.token}`
+            }
+          },(err,data)=>{
+            if(err){
+              promptAction.showToast({ message: '网络错误' })
+              promptAction.showToast({ message: err.message })
+              return
+            }else {
+              let dataObj = JSON.parse(data.result as string)
+              console.info(dataObj)
+              if(dataObj.code == 'SUCCESS'){
+                promptAction.showToast({ message: '删除成功' })
+              }else {
+                promptAction.showToast({ message: '删除失败' })
+              }
+            }
+          })
           this.plants.splice(index,1)
         })
     }.padding(4).justifyContent(FlexAlign.SpaceEvenly)

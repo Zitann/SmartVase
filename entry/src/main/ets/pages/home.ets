@@ -17,7 +17,7 @@ struct Home{
   private controller: TabsController = new TabsController()
 
   getPlantList(){
-    this.httpRequest.request("http://10.134.48.122:2013/plant/list",{
+    this.httpRequest.request("http://123.60.145.37:5000/plant/list",{
       method:http.RequestMethod.GET,
       header: {
         "Authorization": `Bearer ${this.user.token}`
@@ -32,7 +32,7 @@ struct Home{
         if(dataObj.code == 'SUCCESS') {
           this.plantList = []
           for(let plant of dataObj.data){
-            this.plantList.push(new PlantData(plant.name,plant.description,plant.image,plant.temperature,plant.humidity,plant.luminance))
+            this.plantList.push(new PlantData(plant.id,plant.name,plant.description,plant.image,plant.temperature,plant.humidity,plant.luminance))
           }
           console.info(JSON.stringify(this.plantList))
         }else{

@@ -13,6 +13,7 @@ export class User{
 }
 
 export class PlantData{
+  id:string ='';
   name:string='';
   description:string='';
   imageUrl:string='';
@@ -20,7 +21,8 @@ export class PlantData{
   humidity:number=0;
   luminance:number=0;
 
-  constructor(name: string='', description: string='', imageUrl: string='', temperature: number=0, humidity: number=0, luminance: number=0) {
+  constructor(id:string='',name: string='', description: string='', imageUrl: string='', temperature: number=0, humidity: number=0, luminance: number=0) {
+    this.id = id;
     this.name = name;
     this.description = description;
     this.imageUrl = imageUrl;

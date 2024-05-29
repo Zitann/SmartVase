@@ -10,7 +10,6 @@ export default class BLE{
     } catch (err) {
       console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
     }
-    console.info('jzt state: ' + state);
     if (state != bluetoothManager.BluetoothState.STATE_ON) {
       try {
         bluetoothManager.enableBluetooth();
