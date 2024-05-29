@@ -36,7 +36,7 @@ export default struct Account{
             .fontSize(18)
             .fontWeight(FontWeight.Bold)
           Row(){
-            Text(this.user.userName)
+            Text(this.user.userName??"undefined")
               .fontColor(Color.Gray)
             Image($r('app.media.ic_public_arrow_right'))
               .width('7%')

@@ -1,27 +1,57 @@
 import Plant from '../tabs/plant'
 import Account from '../tabs/account'
-import { User } from '../common/Data'
+import { User,PlantData } from '../common/Data'
 import router from '@ohos.router';
-import dataPreferences from '@ohos.data.preferences';
+import http from '@ohos.net.http';
+import promptAction from '@ohos.promptAction';
 
 @Entry
 @Component
 struct Home{
   // 当前活动页面
   @State currentIndex: number = 0
-  @State user: User = null
+  @State user: User = new User()
+  @State plantList: PlantData[] = []
+  httpRequest:http.HttpRequest = http.createHttp();
   // 控制器
   private controller: TabsController = new TabsController()
 
+  getPlantList(){
+    this.httpRequest.request("http://10.134.48.122:2013/plant/list",{
+      method:http.RequestMethod.GET,
+      header: {
+        "Authorization": `Bearer ${this.user.token}`
+      }
+    },(err,data)=>{
+      if(err){
+        promptAction.showToast({ message: '网络错误' })
+        promptAction.showToast({ message: err.message })
+        return
+      }else{
+        let dataObj = JSON.parse(data.result as string)
+        if(dataObj.code == 'SUCCESS') {
+          this.plantList = []
+          for(let plant of dataObj.data){
+            this.plantList.push(new PlantData(plant.name,plant.description,plant.image,plant.temperature,plant.humidity,plant.luminance))
+          }
+          console.info(JSON.stringify(this.plantList))
+        }else{
+          promptAction.showToast({ message: '获取植物 '+dataObj.message })
+        }
+      }
+    })
+  }
+
   onPageShow(): void {
     this.user = router.getParams() as User
+    this.getPlantList()
   }
   // 两个页面在tabs文件夹中
   build(){
     Column(){
       Tabs({barPosition:BarPosition.End, controller: this.controller}){
         TabContent(){
-          Plant()
+          Plant({plants:this.plantList,token:this.user.token})
         }
         .tabBar(this.TabBuilder(0,'植物',$r('app.media.plant')))
         TabContent(){

@@ -7,6 +7,8 @@ import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
 import BLE from '../common/BLE'
 import wifi from '@ohos.wifi';
+import { PlantData } from '../common/Data';
+import http from '@ohos.net.http';
 
 @CustomDialog
 struct Dialog {
@@ -98,6 +100,7 @@ struct Information{
   @State mac: string = ''
   context = getContext(this)
   ble = new BLE()
+  httpRequest:http.HttpRequest = http.createHttp();
 
   dialogController: CustomDialogController = new CustomDialogController({
     builder: Dialog({
@@ -115,39 +118,47 @@ struct Information{
     alignment: DialogAlignment.Center,
   })
   @State edit:boolean = false
-  @State plant :{name:string,description:string,imageUrl:string,temperature:number,humidity:number,luminance:number,history:{time:string,temperature:number,humidity:number,luminance:number}[]}=
-    {
-      name:"牡丹花",
-      description:"牡丹花是一种被广泛栽培的花卉，是中国的传统名花之一。",
-      imageUrl:"$r('app.media.icon')",
-      temperature:25,humidity:50,luminance:1000,
-      history:[
-        {time:'2021-08-01',temperature:25,humidity:50,luminance:1000},
-        {time:'2021-08-02',temperature:26,humidity:51,luminance:1001},
-        {time:'2021-08-03',temperature:27,humidity:52,luminance:1002},
-        {time:'2021-08-04',temperature:28,humidity:53,luminance:1003},
-        {time:'2021-08-05',temperature:29,humidity:54,luminance:1004},
-        {time:'2021-08-06',temperature:30,humidity:55,luminance:1005},
-        {time:'2021-08-07',temperature:31,humidity:56,luminance:1006},
-        {time:'2021-08-08',temperature:32,humidity:57,luminance:1007},
-        {time:'2021-08-09',temperature:33,humidity:58,luminance:1008},
-        {time:'2021-08-10',temperature:34,humidity:59,luminance:1009},
-        {time:'2021-08-11',temperature:35,humidity:60,luminance:1010},
-        {time:'2021-08-12',temperature:36,humidity:61,luminance:1011},
-        {time:'2021-08-13',temperature:37,humidity:62,luminance:1012},
-        {time:'2021-08-14',temperature:38,humidity:63,luminance:1013},
-        {time:'2021-08-15',temperature:39,humidity:64,luminance:1014},
-        {time:'2021-08-16',temperature:40,humidity:65,luminance:1015},
-        {time:'2021-08-17',temperature:41,humidity:66,luminance:1016},
-        {time:'2021-08-18',temperature:42,humidity:67,luminance:1017},
-        {time:'2021-08-19',temperature:43,humidity:68,luminance:1018},
-        {time:'2021-08-20',temperature:44,humidity:69,luminance:1019}
-      ]
-    }
-  index: number
+  @State plant :PlantData = new PlantData()
+  token = ''
+  timeId = 0
+
+  getPlant(index:number){
+    this.httpRequest.request("http://10.134.48.122:2013/plant/list",{
+      method:http.RequestMethod.GET,
+      header: {
+        "Authorization": `Bearer ${this.token}`
+      }
+    },(err,data)=>{
+      if(err){
+        promptAction.showToast({ message: '网络错误' })
+        promptAction.showToast({ message: err.message })
+        return
+      }else{
+        let dataObj = JSON.parse(data.result as string)
+        if(dataObj.code == 'SUCCESS') {
+          this.plant = new PlantData(dataObj.data[index].name,dataObj.data[index].description,dataObj.data[index].image,dataObj.data[index].temperature,dataObj.data[index].humidity,dataObj.data[index].luminance)
+        }else{
+          promptAction.showToast({ message: '获取植物 '+dataObj.message })
+        }
+      }
+    })
+  }
 
   onPageShow(): void {
+    let data = router.getParams() as {index:number,token:string}
+    this.token = data.token
+    let index = data.index
+    this.getPlant(index)
+    this.timeId=setInterval(()=>{
+      this.getPlant(index)
+      console.log(JSON.stringify(this.plant))
+    },1000)
+    console.log(JSON.stringify(this.plant))
     this.ble.Check()
+  }
+
+  onPageHide(): void {
+    clearInterval(this.timeId)
   }
   // 选择图片
   getPhotoImg() {
@@ -279,7 +290,7 @@ struct Information{
 
           Row(){
             Column() {
-              Text(`${this.plant.temperature}`+" °")
+              Text(`${this.plant.temperature??"null"}`+" °")
                 .fontSize(25)
                 .width('20%')
                 .textAlign(TextAlign.Center)
@@ -298,7 +309,7 @@ struct Information{
             }
             .alignItems(HorizontalAlign.Start)
             Column() {
-              Text(`${this.plant.humidity}`)
+              Text(`${this.plant.humidity??"null"}`)
                 .fontSize(25)
                 .width('20%')
                 .textAlign(TextAlign.Center)
@@ -317,7 +328,7 @@ struct Information{
             }
             .alignItems(HorizontalAlign.Start)
             Column() {
-              Text(`${this.plant.luminance}`)
+              Text(`${this.plant.luminance??"null"}`)
                 .fontSize(25)
                 .width('20%')
                 .textAlign(TextAlign.Center)
@@ -354,11 +365,11 @@ struct Information{
             .width('100%')
             .fontWeight(FontWeight.Bold)
 
-          Swiper(){
-            historyT({plant:$plant})
-            historyH({plant:$plant})
-            historyI({plant:$plant})
-          }
+          // Swiper(){
+          //   historyT({histories:globalThis.histories})
+          //   historyH({histories:globalThis.histories})
+          //   historyI({histories:globalThis.histories})
+          // }
 
           //history({ plant: $plant })
         }.width('90%')
