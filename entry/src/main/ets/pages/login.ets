@@ -8,7 +8,6 @@ import dataPreferences from '@ohos.data.preferences';
 @Component
 struct Login{
   login:boolean = true
-  @State visible:boolean = false
   @State phone: string = ''
   @State passwd: string = ''
   httpRequest:http.HttpRequest = http.createHttp();
@@ -22,7 +21,7 @@ struct Login{
         .fontSize('30vp')
         .margin({top:'10%'})
       Row(){
-        Image($r('app.media.ic_public_contacts'))
+        Image($r('app.media.ic_public_phone'))
           .height('3%')
           .margin({left:'3%'})
         TextInput({placeholder:'请输入手机号',text:this.phone})
@@ -48,7 +47,7 @@ struct Login{
           .height('6%')
           .width('90%')
           .backgroundColor(Color.White)
-          .type(this.visible?InputType.Normal:InputType.Password)
+          .type(InputType.Password)
           .onChange((s:string)=>{
             this.passwd = s
           })
@@ -64,7 +63,7 @@ struct Login{
               .backgroundColor('#F1F3F4')
               .fontColor('#409EFF')
               .onClick(()=>{
-                router.replaceUrl({url:'pages/register'})
+                router.pushUrl({url:'pages/register'})
               })
           }
         Text('忘记密码？')
@@ -77,7 +76,11 @@ struct Login{
         .width('50%')
         .margin({top:'10%'})
         .onClick(()=>{
-          this.httpRequest.request('http://10.134.176.130:2013/user/login',{
+          if(this.phone == '' || this.passwd == '') {
+            promptAction.showToast({ message: '账号或密码为空' })
+            return
+          }
+          this.httpRequest.request('http://123.60.145.37:5000/user/login',{
             method:http.RequestMethod.POST,
             extraData:{
               phone:this.phone.toString(),
@@ -105,6 +108,7 @@ struct Login{
             }
             else {
               promptAction.showToast({ message: '账号或密码错误' })
+              this.passwd = ''
             }
           })
         })

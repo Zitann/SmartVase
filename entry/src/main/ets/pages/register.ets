@@ -7,8 +7,6 @@ import dataPreferences from '@ohos.data.preferences';
 @Entry
 @Component
 struct Register {
-  login:boolean = true
-  @State visible:boolean = false
   @State username: string = ''
   @State phone: string = ''
   @State passwd: string = ''
@@ -41,7 +39,7 @@ struct Register {
       .backgroundColor(Color.White)
       .border({radius:15})
       Row(){
-        Image($r('app.media.ic_public_contacts'))
+        Image($r('app.media.ic_public_phone'))
           .height('3%')
           .margin({left:'3%'})
         TextInput({placeholder:'请输入手机号',text:this.phone})
@@ -66,7 +64,7 @@ struct Register {
           .height('6%')
           .width('90%')
           .backgroundColor(Color.White)
-          .type(this.visible?InputType.Normal:InputType.Password)
+          .type(InputType.Password)
           .onChange((s:string)=>{
             this.passwd = s
           })
@@ -85,7 +83,7 @@ struct Register {
           .height('6%')
           .width('90%')
           .backgroundColor(Color.White)
-          .type(this.visible?InputType.Normal:InputType.Password)
+          .type(InputType.Password)
           .onChange((s:string)=>{
             this.passwd2 = s
           })
@@ -100,11 +98,14 @@ struct Register {
         .width('50%')
         .margin({top:'10%'})
         .onClick(()=>{
-            if(this.passwd != this.passwd2){
+            if(this.username == '' || this.phone == '' || this.passwd == '' || this.passwd2 == ''){
+              promptAction.showToast({ message:'请填写完整信息' })
+              return
+            }else if(this.passwd != this.passwd2){
               promptAction.showToast({ message:'两次密码不一致' })
               return
             }else {
-              this.httpRequest.request('http://10.134.176.130:2013/user/register',{
+              this.httpRequest.request('http://123.60.145.37:5000/user/register',{
                 method:http.RequestMethod.POST,
                 extraData:{
                   username:this.username.toString(),

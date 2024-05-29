@@ -106,7 +106,7 @@ struct Start {
         .margin({top:'45%'})
       Column() {
         Text(this.appName)
-          .fontSize('20vp')
+          .fontSize('40vp')
           .fontWeight(FontWeight.Bold)
         Text(this.inf)
           .fontColor(Color.Gray)
@@ -116,6 +116,6 @@ struct Start {
     .width('100%')
     .height('100%')
     .justifyContent(FlexAlign.SpaceBetween)
-    // .backgroundColor(Color.Black)
+    .backgroundColor("#F1F3F5")
   }
 }
