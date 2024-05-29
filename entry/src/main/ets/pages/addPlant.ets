@@ -213,8 +213,12 @@ struct AddPlant{
           .height(30)
           .margin({ top: '15%' })
           .onClick(() => {
-            this.addPlant()
-            this.ble.SendData(this.plantId)
+            try {
+              this.ble.SendData(this.plantId)
+              this.addPlant()
+            } catch (error) {
+              promptAction.showToast({ message: '请先连接设备' })
+            }
           })
       }
       .width('90%')
