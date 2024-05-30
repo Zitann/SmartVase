@@ -4,9 +4,11 @@
 
 2024物联网大赛前端
 
-<img src="http://123.60.145.37:5000/favicon.ico"/>
+  <p align="center">
+    <img src="https://github.com/Narrao/SmartVase/blob/main/entry/src/main/resources/base/media/icon.png?raw=true" style="width:120px;height:120px;">
+  </p>
 
-  <h3 align="center">云瓶</h3>
+  <h2 align="center">云瓶</h2>
   <p align="center">
     开始你的绿色之旅！
     <br />
