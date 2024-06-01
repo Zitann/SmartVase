@@ -7,7 +7,6 @@ import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
 import { History, PlantData } from '../common/Data';
 import http from '@ohos.net.http';
-
 @Entry
 @Component
 struct Information{
@@ -17,10 +16,10 @@ struct Information{
   @State edit:boolean = false
   @State plant :PlantData = new PlantData()
   @State histories:History[] = []
+
   token = ''
   plantId=''
   timeId = 0
-
   getPlant(){
     this.httpRequest.request(`http://123.60.145.37:5000/plant/info?id=${this.plantId}`,{
       method:http.RequestMethod.GET,
@@ -319,12 +318,19 @@ struct Information{
           Text('历史数据')
             .width('100%')
             .fontWeight(FontWeight.Bold)
+            .onClick(()=>{
+              console.log(this.histories.map(entry => entry.temperature).toString())
+              console.log(this.histories.map(entry => entry.humidity).toString())
+              console.log(this.histories.map(entry => entry.luminance).toString())
+            })
 
-          Swiper(){
-            historyT({histories: this.histories})
-            historyH({histories: this.histories})
-            historyI({histories: this.histories})
+          Swiper() {
+            historyT({ histories: this.histories})
+            historyH({ histories: this.histories })
+            historyI({ histories: this.histories })
           }
+          //test({ histories: this.histories})
+
 
           //history({ plant: $plant })
         }.width('90%')
@@ -339,4 +345,7 @@ struct Information{
       .backgroundColor('#F1F3F5')
       .justifyContent(FlexAlign.Start)
   }
+
 }
+
+

@@ -25,10 +25,52 @@ export struct historyH {
 
   build(){
     Column() {
-      Text('湿度')
-        .fontSize(15)
-        .fontColor(Color.Gray)
-      McLineChart({ options: this.Humidity })
+      Row() {
+        Text('湿度')
+          .fontSize(20)
+          .fontColor(Color.Gray)
+          .textAlign(TextAlign.End)
+          .width('50%')
+
+        Image($r('app.media.ic_public_refresh'))
+          .margin({
+            left:'5%'
+          })
+          .width(20)
+          .height(20)
+          .onClick(()=>{
+            this.Humidity.series = [
+              {
+                // @ts-ignore
+                data: this.histories.map(history => history.humidity)
+              }
+            ];
+            console.log('refresh')
+          })
+      }
+      .width('100%')
+      CustomLayout({Humidity:this.Humidity,histories:this.histories}) {
+        McLineChart({ options: this.Humidity })
+      }
     }.width('100%').height(200).backgroundColor('#FFFFFF').borderRadius(10)
+  }
+}
+@Component
+struct CustomLayout {
+  @BuilderParam builder: () => {};
+  @Link Humidity: Options
+  @Link histories:History[]
+  onLayout(children: Array<LayoutChild>, constraint: ConstraintSizeOptions) {
+    this.Humidity.series = [
+      {
+        // @ts-ignore
+        data: this.histories.map(history => history.humidity)
+      }
+    ];
+    console.log('refresh')
+  }
+
+  build() {
+    this.builder()
   }
 }
