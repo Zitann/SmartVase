@@ -232,10 +232,17 @@ struct Information{
         .alignItems(HorizontalAlign.End)
 
         Column(){
-          Text('当前数据')
-            .width('100%')
-            .fontWeight(FontWeight.Bold)
-
+          Row() {
+            Text('当前数据')
+              .fontWeight(FontWeight.Bold)
+            Image($r('app.media.ic_public_refresh'))
+              .width(20)
+              .height(20)
+              .margin({ left: '5%' })
+              .onClick(() => {
+                this.getHistory()
+              })
+          }
           Row(){
             Column() {
               Text(`${this.plant.temperature??"null"}`+" °")
@@ -312,7 +319,7 @@ struct Information{
         .margin({ top: '5%' })
         .padding('5%')
         .border({ radius: 15 })
-        .alignItems(HorizontalAlign.End)
+        .alignItems(HorizontalAlign.Start)
 
         Column() {
           Text('历史数据')

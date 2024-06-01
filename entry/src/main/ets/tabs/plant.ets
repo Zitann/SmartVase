@@ -7,26 +7,60 @@ import promptAction from '@ohos.promptAction';
 @Component
 export default struct Plant{
   @Link plants:PlantData[]
+  @State refreshing: boolean = true;
   token:string = ''
   httpRequest:http.HttpRequest = http.createHttp();
+
+  getPlantList(){
+    this.httpRequest.request("http://123.60.145.37:5000/plant/list",{
+      method:http.RequestMethod.GET,
+      header: {
+        "Authorization": `Bearer ${this.token}`
+      }
+    },(err,data)=>{
+      if(err){
+        promptAction.showToast({ message: '网络错误' })
+        promptAction.showToast({ message: err.message })
+        return
+      }else{
+        let dataObj = JSON.parse(data.result as string)
+        if(dataObj.code == 'SUCCESS') {
+          this.plants = []
+          for(let plant of dataObj.data){
+            this.plants.push(new PlantData(plant.id,plant.name,plant.description,plant.image,plant.temperature,plant.humidity,plant.luminance))
+          }
+          console.info(JSON.stringify(this.plants))
+        }else{
+          promptAction.showToast({ message: '获取植物 '+dataObj.message })
+        }
+      }
+      console.info(this.refreshing.toString())
+      this.refreshing = false
+    })
+  }
 
   build(){
     Column(){
       Title({title:'植物列表'})
-      List({space:10}){
-        ForEach(this.plants,(plant:PlantData, index?:number)=>{
-          ListItem(){
-            this.item(plant)
-          }.swipeAction({ end:this.itemEnd.bind(this,index), edgeEffect: SwipeEdgeEffect.Spring})
-        })
+      Refresh({ refreshing: this.refreshing }) {
+        List({ space: 10 }) {
+          ForEach(this.plants, (plant: PlantData, index?: number) => {
+            ListItem() {
+              this.item(plant)
+            }.swipeAction({ end: this.itemEnd.bind(this, index), edgeEffect: SwipeEdgeEffect.Spring })
+          })
+        }
+        .width('90%')
+        .height('80%')
+        .backgroundColor(Color.White)
+        .border({ radius: 15 })
+        .margin({ top: 20 })
+        .padding(10)
       }
-      .width('90%')
-      .height('80%')
-      .backgroundColor(Color.White)
-      .border({radius:15})
-      .margin({top:20})
-      .padding(10)
-
+      .onRefreshing(() => {
+        this.refreshing = true
+        this.getPlantList()
+      })
 
       Image($r('app.media.ic_public_list_add_light'))
         .width(64)

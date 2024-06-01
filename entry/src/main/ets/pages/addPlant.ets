@@ -11,6 +11,7 @@ struct Dialog {
   // 双向绑定传值
   @Link ssid: string
   @Link password: string
+  plantId: string
   ble: BLE
   // 弹窗控制器，控制打开/关闭，必须传入，且名称必须为：controller
 
@@ -49,7 +50,7 @@ struct Dialog {
           }).backgroundColor(0xffffff).fontColor(Color.Black).width('25%')
         Button('确定')
           .onClick(() => {
-            this.ble.SendData(this.ssid+','+this.password)
+            this.ble.SendData(this.ssid+','+this.password+','+this.plantId)
             this.controller.close()
           }).backgroundColor(0xffffff).fontColor(Color.Red).width('25%')
       }.margin({ bottom: 10 })
@@ -104,7 +105,8 @@ struct AddPlant{
     builder: Dialog({
       ssid: $ssid,
       password: $password,
-      ble: this.ble
+      ble: this.ble,
+      plantId: this.plantId
     }),
     alignment: DialogAlignment.Center,
   })
@@ -117,7 +119,7 @@ struct AddPlant{
   })
 
   guid() {
-    return 'xxxxxxxx-xxxx'.replace(/[xy]/g, function (c) {
+    return 'xxxxxxxx-xxxxxxxx'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0,
         v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
@@ -200,7 +202,11 @@ struct AddPlant{
             .onClick(() => {
               wifi.getLinkedInfo().then((info) => {
                 this.ssid = info['ssid'].replace('"', '').replace('"', '')
-                this.dialogController.open()
+                try{
+                  this.dialogController.open()
+                }catch(e){
+                  promptAction.showToast({ message: '请先连接设备' })
+                }
               })
             })
         }
@@ -214,7 +220,6 @@ struct AddPlant{
           .margin({ top: '15%' })
           .onClick(() => {
             try {
-              this.ble.SendData(this.plantId)
               this.addPlant()
             } catch (error) {
               promptAction.showToast({ message: '请先连接设备' })
