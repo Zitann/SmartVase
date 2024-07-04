@@ -7,6 +7,7 @@ import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
 import { History, PlantData } from '../common/Data';
 import http from '@ohos.net.http';
+import UIAbility from '@ohos.app.ability.UIAbility';
 @Entry
 @Component
 struct Information{
@@ -354,5 +355,4 @@ struct Information{
   }
 
 }
-
 
