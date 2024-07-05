@@ -54,6 +54,7 @@ entry
     │  │  ├─common			//工具与数据定义
     │  │  ├─entryability	//入口文件
     │  │  ├─pages			//界面构造文件
+    |  |  ├─widget    //服务卡片
     │  │  └─tabs			//组件构造文件
     │  └─resources
     │      ├─base
