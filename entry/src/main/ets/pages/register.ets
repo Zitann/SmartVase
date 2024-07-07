@@ -96,6 +96,7 @@ struct Register {
 
       Button('注册')
         .width('50%')
+        .height(40)
         .margin({top:'10%'})
         .onClick(()=>{
             if(this.username == '' || this.phone == '' || this.passwd == '' || this.passwd2 == ''){

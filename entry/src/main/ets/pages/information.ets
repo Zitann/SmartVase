@@ -17,10 +17,25 @@ struct Information{
   @State edit:boolean = false
   @State plant :PlantData = new PlantData()
   @State histories:History[] = []
-
+  @State isOn:boolean = false
   token = ''
   plantId=''
   timeId = 0
+
+  sendCommand(command:string){
+    this.httpRequest.request(`http://123.60.145.37:5000/podcast/send`,{
+      method:http.RequestMethod.POST,
+      header: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${this.token}`
+      },
+      extraData:{
+        "id":this.plantId,
+        "command":command
+      }
+    })
+  }
+
   getPlant(){
     this.httpRequest.request(`http://123.60.145.37:5000/plant/info?id=${this.plantId}`,{
       method:http.RequestMethod.GET,
@@ -154,20 +169,27 @@ struct Information{
   build(){
       Column() {
         Title({ title: '植物信息' })
+        Image($r('app.media.flower'))
+          .width('90%')
+          .height('15%')
+          .objectFit(ImageFit.Cover)
+          .border({ radius: 15 })
+          .margin({ top: '5%' })
+
         Column() {
           if(this.edit)
           {
             TextInput({text: this.name})
               .fontSize(20)
               .fontColor(Color.Black)
-              .backgroundColor(Color.White)
+              .backgroundColor('#F1F3F5')
               .onChange((text) => {
                 this.name = text
               })
             TextInput({text: this.description})
               .fontSize(15)
               .fontColor(Color.Black)
-              .backgroundColor(Color.White)
+              .backgroundColor('#F1F3F5')
               .margin({ top: '3%' })
               .onChange((text) => {
                 this.description = text
@@ -175,29 +197,17 @@ struct Information{
           }else{
             Text(this.name)
               .fontSize(20)
-              .fontColor(Color.White)
+              .fontColor(Color.Black)
             Text(this.description)
               .fontSize(15)
-              .fontColor("#E1E3E5")
+              .fontColor(Color.Gray)
               .margin({ top: '3%' })
           }
-        }
-        .width('90%')
-        .margin({ top: '5%' })
-        .padding('5%')
-        .border({ radius: 15 })
-        .backgroundImage($r('app.media.flower'))
-        .backgroundImageSize(ImageSize.Cover)
-
-        Column() {
-          Text('操作')
-            .width('100%')
-            .fontWeight(FontWeight.Bold)
           Row() {
             if (this.edit) {
               Button('保存')
                 .fontSize(15)
-                .width(80)
+                .width(90)
                 .height(30)
                 .margin({ top: '3%',left:'15%' })
                 .onClick(() => {
@@ -207,7 +217,7 @@ struct Information{
             } else {
               Button('编辑')
                 .fontSize(15)
-                .width(80)
+                .width(90)
                 .height(30)
                 .margin({ top: '3%',left:'15%' })
                 .onClick(() => {
@@ -217,10 +227,49 @@ struct Information{
             Blank()
             Button('图片+')
               .fontSize(15)
-              .width(80)
+              .width(90)
               .height(30)
               .margin({ top: '3%',right:'15%' })
 
+          }
+          .width('100%')
+          .height('5%')
+          Row(){
+            Row(){
+              Image($r('app.media.ic_gallery_create'))
+                .height(20)
+                .margin({ top: '3%',left:'15%' })
+                .fillColor(this.isOn?'#007DFF':Color.Gray)
+              Toggle({ type: ToggleType.Switch, isOn: false })
+                .selectedColor('#007DFF')
+                .switchPointColor('#FFFFFF')
+                .onChange((isOn: boolean) => {
+                  console.info('Component status:' + isOn)
+                  this.isOn = isOn
+                  if (isOn) {
+                    this.sendCommand('light-on')
+                  } else {
+                    this.sendCommand('light-off')
+                  }
+                })
+                .height(30)
+                .width(60)
+                .margin({ top: '3%'})
+            }
+            .width(90)
+            .height(30)
+            .backgroundColor(Color.White)
+            .border({ radius: 15})
+            .margin({ top: '3%',left:'15%' })
+            Blank()
+            Button('浇水')
+              .fontSize(15)
+              .width(90)
+              .height(30)
+              .margin({ top: '3%',right:'15%' })
+              .onClick(()=>{
+                this.sendCommand('water')
+              })
           }
           .width('100%')
           .height('5%')
@@ -230,7 +279,7 @@ struct Information{
         .margin({ top: '5%' })
         .padding('5%')
         .border({ radius: 15 })
-        .alignItems(HorizontalAlign.End)
+        .alignItems(HorizontalAlign.Center)
 
         Column(){
           Row() {
@@ -246,10 +295,14 @@ struct Information{
           }
           Row(){
             Column() {
-              Text(`${this.plant.temperature??"null"}`+" °")
-                .fontSize(25)
-                .width('20%')
-                .textAlign(TextAlign.Center)
+              Row(){
+                Text(`${this.plant.temperature ?? "null"}`)
+                  .fontSize(25)
+                  .textAlign(TextAlign.Center)
+                Text(' ℃')
+                  .fontColor(Color.Gray)
+                  .fontSize(12)
+              }
               Row() {
                 Text('温度')
                   .fontColor(Color.Gray)
@@ -267,10 +320,14 @@ struct Information{
             .alignItems(HorizontalAlign.Center)
             .justifyContent(FlexAlign.Center)
             Column() {
-              Text(`${this.plant.humidity??"null"}`)
-                .fontSize(25)
-                .width('20%')
-                .textAlign(TextAlign.Center)
+              Row(){
+                Text(`${this.plant.humidity ?? "null"}`)
+                  .fontSize(25)
+                  .textAlign(TextAlign.Center)
+                Text(' %')
+                  .fontColor(Color.Gray)
+                  .fontSize(12)
+              }
               Row() {
                 Text('湿度')
                   .fontColor(Color.Gray)
@@ -288,10 +345,14 @@ struct Information{
             .alignItems(HorizontalAlign.Center)
             .justifyContent(FlexAlign.Center)
             Column() {
-              Text(`${this.plant.luminance??"null"}`)
-                .fontSize(25)
-                .width('20%')
-                .textAlign(TextAlign.Center)
+              Row(){
+                Text(`${this.plant.luminance ?? "null"}`)
+                  .fontSize(25)
+                  .textAlign(TextAlign.Center)
+                Text(' Lux')
+                  .fontColor(Color.Gray)
+                  .fontSize(12)
+              }
               Row() {
                 Text('光照')
                   .fontColor(Color.Gray)

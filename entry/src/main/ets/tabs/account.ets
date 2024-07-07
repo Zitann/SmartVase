@@ -77,6 +77,7 @@ export default struct Account{
       .border({radius:15})
       Button('退出登录')
         .width('50%')
+        .height(40)
         .margin({ top: '80%' })
         .backgroundColor(Color.Red)
         .onClick(() => {

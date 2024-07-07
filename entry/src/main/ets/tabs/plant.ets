@@ -51,7 +51,7 @@ export default struct Plant{
           })
         }
         .width('90%')
-        .height('80%')
+        .height('85%')
         .backgroundColor(Color.White)
         .border({ radius: 15 })
         .margin({ top: 20 })
@@ -63,13 +63,12 @@ export default struct Plant{
       })
 
       Image($r('app.media.ic_public_list_add_light'))
-        .width(64)
-        .height(64)
+        .width(56)
+        .height(56)
         .position({
-          x: '70%', y: '80%'
+          x: '76%', y: '86%'
         })
         .onClick(() => {
-          // todo 点击按钮，跳转至新增页面
           router.pushUrl({
             url: 'pages/addPlant',
             params: {token:this.token}
@@ -82,7 +81,6 @@ export default struct Plant{
     .justifyContent(FlexAlign.Start)
   }
 
-  //TODO: 以下为布局函数，根据实际需求修改
   // 每一项创建的布局
   @Builder item(plant:PlantData){
     Row(){
@@ -107,23 +105,26 @@ export default struct Plant{
     .height(100)
     .justifyContent(FlexAlign.SpaceBetween)
     .borderRadius(12)
+    .onClick(()=>{
+      router.pushUrl({url:'pages/information',params:{id:plant.id,token:this.token}})
+    })
   }
 
   // 滑动删除和编辑的布局
   @Builder itemEnd(index:number) {
     Row () {
-      Button() {
-        Image($r("app.media.ic_public_edit_filled"))
-          .width('70%')
-          .fillColor(Color.White)
-      }
-        .width(40)
-        .height(40)
-        .margin(4)
-        .onClick(()=>{
-          console.info('Click Icon')
-          router.pushUrl({url:'pages/information',params:{id:this.plants[index].id,token:this.token}})
-        })
+      // Button() {
+      //   Image($r("app.media.ic_public_edit_filled"))
+      //     .width('70%')
+      //     .fillColor(Color.White)
+      // }
+      //   .width(40)
+      //   .height(40)
+      //   .margin(4)
+      //   .onClick(()=>{
+      //     console.info('Click Icon')
+      //     router.pushUrl({url:'pages/information',params:{id:this.plants[index].id,token:this.token}})
+      //   })
       Button(){
         Image($r("app.media.ic_public_delete_filled"))
           .width('70%')

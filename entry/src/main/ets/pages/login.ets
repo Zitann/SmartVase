@@ -8,8 +8,8 @@ import dataPreferences from '@ohos.data.preferences';
 @Component
 struct Login{
   login:boolean = true
-  @State phone: string = ''
-  @State passwd: string = ''
+  @State phone: string = '123'
+  @State passwd: string = 'admin'
   httpRequest:http.HttpRequest = http.createHttp();
   build(){
     Column(){
@@ -74,6 +74,7 @@ struct Login{
       .margin({top:'5%'})
       Button('登录')
         .width('50%')
+        .height(40)
         .margin({top:'10%'})
         .onClick(()=>{
           if(this.phone == '' || this.passwd == '') {

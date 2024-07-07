@@ -2,7 +2,7 @@
   "forms": [
     {
       "name": "widget",
-      "description": "This is a service widget.",
+      "description": "云瓶",
       "src": "./ets/widget/pages/WidgetCard.ets",
       "uiSyntax": "arkts",
       "window": {

@@ -50,7 +50,8 @@ struct Dialog {
           }).backgroundColor(0xffffff).fontColor(Color.Black).width('25%')
         Button('确定')
           .onClick(() => {
-            this.ble.SendData(this.ssid+','+this.password+','+this.plantId)
+            let message = this.ssid+','+this.password+','+this.plantId
+            this.ble.SendData(message)
             this.controller.close()
           }).backgroundColor(0xffffff).fontColor(Color.Red).width('25%')
       }.margin({ bottom: 10 })
@@ -119,7 +120,7 @@ struct AddPlant{
   })
 
   guid() {
-    return 'xxxxxxxx-xxxxxxxx'.replace(/[xy]/g, function (c) {
+    return 'xxxx'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0,
         v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
@@ -166,27 +167,34 @@ struct AddPlant{
   build() {
     Column(){
       Title({ title: '添加植物' })
+      Image($r('app.media.flower'))
+        .width('90%')
+        .margin({ top: '5%' })
+        .height('25%')
+        .border({ radius: 15 })
       Column() {
         TextInput({ text: this.name,placeholder: '请输入植物名称' })
           .fontSize(20)
           .fontColor(Color.Black)
-          .backgroundColor(Color.White)
+          .backgroundColor('#F1F3F5')
           .onChange((text) => {
             this.name = text
           })
+          .height(40)
         TextInput({ text: this.description,placeholder: '请输入植物描述' })
           .fontSize(15)
           .fontColor(Color.Black)
-          .backgroundColor(Color.White)
+          .backgroundColor('#F1F3F5')
           .margin({ top: '3%' })
           .onChange((text) => {
             this.description = text
           })
+          .height(40)
         Row() {
           Button('设备')
             .fontSize(15)
-            .width(80)
-            .height(30)
+            .width(100)
+            .height(40)
             .margin({ top: '3%',left:'15%' })
             .onClick(() => {
               this.ble.GotoScanner(globalThis.context)
@@ -196,8 +204,8 @@ struct AddPlant{
           Blank()
           Button('配网')
             .fontSize(15)
-            .width(80)
-            .height(30)
+            .width(100)
+            .height(40)
             .margin({ top: '3%',right:'15%' })
             .onClick(() => {
               wifi.getLinkedInfo().then((info) => {
@@ -216,7 +224,7 @@ struct AddPlant{
         Button('添加')
           .fontSize(20)
           .width('75%')
-          .height(30)
+          .height(40)
           .margin({ top: '15%' })
           .onClick(() => {
             try {
@@ -231,8 +239,7 @@ struct AddPlant{
       .padding('5%')
       .height('35%')
       .border({ radius: 15 })
-      .backgroundImage($r('app.media.flower'))
-      .backgroundImageSize(ImageSize.Cover)
+      .backgroundColor(Color.White)
     }
     .width('100%')
     .height('100%')
