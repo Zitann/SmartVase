@@ -56,7 +56,7 @@ export default class BLE{
     }
   }
 
-  SendData(strData:string) {
+  SendData(strData:string,n:number) {
     // let characteristic = {serviceUuid: 'EFCDAB90-7856-3412-EFCD-AB9078563412',
     //   characteristicUuid: '0000FF01-0000-1000-8000-00805F9B34FB',
     // 将string转为二进制值
@@ -69,7 +69,7 @@ export default class BLE{
       }
       let characteristic = {
         serviceUuid: 'EFCDAB90-7856-3412-EFCD-AB9078563412',
-        characteristicUuid: '0000FF01-0000-1000-8000-00805F9B34FB',
+        characteristicUuid: `0000FF0${n}-0000-1000-8000-00805F9B34FB`,
         characteristicValue: buffer,
         descriptors: []
       };

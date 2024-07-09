@@ -50,8 +50,12 @@ struct Dialog {
           }).backgroundColor(0xffffff).fontColor(Color.Black).width('25%')
         Button('确定')
           .onClick(() => {
-            let message = this.ssid+','+this.password+','+this.plantId
-            this.ble.SendData(message)
+            let message = this.plantId
+            this.ble.SendData(message,2)
+            message = this.ssid + ',' + this.password
+            setTimeout(message => {
+              this.ble.SendData(message,1)
+            }, 1000,message)
             this.controller.close()
           }).backgroundColor(0xffffff).fontColor(Color.Red).width('25%')
       }.margin({ bottom: 10 })
@@ -120,7 +124,7 @@ struct AddPlant{
   })
 
   guid() {
-    return 'xxxx'.replace(/[xy]/g, function (c) {
+    return 'xxxxxxx-xxxxxxx'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0,
         v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
