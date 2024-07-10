@@ -127,7 +127,7 @@ struct Register {
                   dataPreferences.getPreferences(globalThis.context,'SmartVase').then((preferences)=>{
                     preferences.put('user',JSON.stringify(user)).then(()=>{
                       preferences.flush().then(()=>{
-                        console.log('jzt flush success')
+                        console.log('plant preferences flush success')
                         router.replaceUrl({url:'pages/home',params:user})
                       })
                     })

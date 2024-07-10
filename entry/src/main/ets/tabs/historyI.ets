@@ -3,20 +3,20 @@ import { History } from '../common/Data';
 
 @Component
 export struct historyI {
-  @Link histories:History[]
-  @State historyData:number[] = this.histories.map(history => history.luminance);
-  //@Link Data:Number[]
-  @State Data:String[]=[]
+  @Link  histories:History[]
+  @State historyData:number[] = this.histories.slice(-7).map(entry => entry.luminance)
+
   @State Luminance: Options = new Options({
     xAxis:{ //设置X轴的相关样式与功能
       data:['周一','周二','周三','周四','周五','周六','周日']
     },
     yAxis:{ //设置Y轴的相关样式与功能
-      name:''
+      name:'光照强度',
     },
     series : [
       {
-        data: this.Data
+        name:'光照强度',
+        data: this.histories.slice(-7).map(entry => entry.luminance),
       }
     ],
     legend:{
@@ -24,7 +24,16 @@ export struct historyI {
     }
   })
 
-
+  onUpdate(){
+    this.Luminance.setVal({
+      series:[
+        {
+          name:'光照强度',
+          data: this.histories.slice(-7).map(entry => entry.luminance),
+        }
+      ]
+    })
+  }
 
   build(){
     Column() {
@@ -41,38 +50,19 @@ export struct historyI {
           .width(20)
           .height(20)
           .onClick(()=>{
-            this.Luminance.series = [
-              {
-                // @ts-ignore
-                data: this.histories.map(history => history.luminance)
-              }
-            ];
-            console.log('refresh')
+            this.Luminance.setVal({
+              series:[
+                {
+                  name:'光照强度',
+                  data: this.histories.slice(-7).map(entry => entry.luminance),
+                }
+              ]
+            })
+            console.log('plant luminance ',this.histories.slice(-7).map(entry => entry.luminance))
           })
       }
       .width('100%')
-      CustomLayout({Luminance:this.Luminance,histories:this.histories}) {
-        McLineChart({ options: this.Luminance })
-      }
+      McLineChart({ options: this.Luminance })
     }.width('100%').height(200).backgroundColor('#FFFFFF').borderRadius(10)
-  }
-}
-@Component
-struct CustomLayout {
-  @BuilderParam builder: () => {};
-  @Link Luminance: Options
-  @Link histories:History[]
-  onLayout(children: Array<LayoutChild>, constraint: ConstraintSizeOptions) {
-    this.Luminance.series = [
-      {
-        // @ts-ignore
-        data: this.histories.map(history => history.luminance)
-      }
-    ];
-    console.log('refresh')
-  }
-
-  build() {
-    this.builder()
   }
 }

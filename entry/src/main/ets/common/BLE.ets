@@ -8,13 +8,13 @@ export default class BLE{
     try {
       state = bluetoothManager.getState();
     } catch (err) {
-      console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
+      console.error("plant ble getState errCode:" + err.code + ",errMessage:" + err.message);
     }
     if (state != bluetoothManager.BluetoothState.STATE_ON) {
       try {
         bluetoothManager.enableBluetooth();
       } catch (err) {
-        console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
+        console.error("plant ble enableBluetooth errCode:" + err.code + ",errMessage:" + err.message);
       }
     }
   }
@@ -33,15 +33,13 @@ export default class BLE{
     try {
       deviceIDs = bluetoothManager.BLE.getConnectedBLEDevices();
     } catch (err) {
-      console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
+      console.error("plant ble getPairedDevice errCode:" + err.code + ",errMessage:" + err.message);
     }
-    console.info('jzt devices: ' + JSON.stringify(deviceIDs));
     try{
       for(let deviceID of deviceIDs){
         devices[deviceID] = bluetoothManager.getRemoteDeviceName(deviceID);
       }
     }catch (err) {
-      console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
     }
     return devices as JSON
   }
@@ -52,7 +50,7 @@ export default class BLE{
       promptAction.showToast({message:"连接成功"})
     } catch (err) {
       promptAction.showToast({message:"连接失败"})
-      console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
+      console.error("plant ble connect errCode:" + err.code + ",errMessage:" + err.message);
     }
   }
 
@@ -61,7 +59,7 @@ export default class BLE{
     //   characteristicUuid: '0000FF01-0000-1000-8000-00805F9B34FB',
     // 将string转为二进制值
     this.device.getServices().then(result => {
-      console.info("jzt getServices successfully:" + JSON.stringify(result[2]));
+      console.info("plant ble getServices successfully:" + JSON.stringify(result[2]));
       let buffer = new ArrayBuffer(strData.length);
       let dataView = new Uint8Array(buffer);
       for (let i = 0; i < strData.length; i++) {
@@ -74,13 +72,13 @@ export default class BLE{
         descriptors: []
       };
       try {
-        console.info('jzt characteristic: ' + JSON.stringify(characteristic.characteristicValue));
+        console.info('plant ble characteristic: ' + JSON.stringify(characteristic.characteristicValue));
         this.device.writeCharacteristicValue(characteristic);
       } catch (err) {
         promptAction.showToast({
           message: "发送失败"
         })
-        console.error("jzt errCode:" + err.code + ",errMessage:" + err.message);
+        console.error("plant ble sendData errCode:" + err.code + ",errMessage:" + err.message);
       }
     });
   }

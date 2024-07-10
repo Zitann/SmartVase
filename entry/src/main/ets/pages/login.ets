@@ -95,13 +95,13 @@ struct Login{
             }
             let dataObj = JSON.parse(data.result as string)
             if(dataObj.code == 'SUCCESS') {
-              console.log('jzt success')
+              console.log('plant login success')
               let user = new User(dataObj.data.user.username,dataObj.data.user.phone,dataObj.data.user.avatar,dataObj.data.token)
               console.log(JSON.stringify(user))
               dataPreferences.getPreferences(globalThis.context,'SmartVase').then((preferences)=>{
                 preferences.put('user',JSON.stringify(user)).then(()=>{
                   preferences.flush().then(()=>{
-                    console.log('jzt flush success')
+                    console.log('plant preferences flush success')
                     router.replaceUrl({url:'pages/home',params:user})
                   })
                 })

@@ -143,7 +143,7 @@ struct Information{
     this.getHistory()
     this.timeId=setInterval(()=>{
       this.getHistory()
-    },60000)
+    },5000)
     console.log(JSON.stringify(this.plant))
   }
 

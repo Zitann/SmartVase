@@ -3,7 +3,7 @@ import { History } from '../common/Data';
 
 @Component
 export struct historyH {
-  @Link histories: History[]
+  @Link  histories: History[]
 
   @State historyData:number[] = this.histories.slice(-7).map(entry => entry.humidity);
   @State Humidity: Options = new Options({
@@ -11,17 +11,29 @@ export struct historyH {
       data:['周一','周二','周三','周四','周五','周六','周日']
     },
     yAxis:{ //设置Y轴的相关样式与功能
-      name:''
+      name:'湿度',
     },
     series : [
       {
-        data: this.historyData,
+        name:'湿度',
+        data: this.histories.slice(-7).map(entry => entry.humidity),
       }
     ],
     legend:{
       show:false
     }
   })
+
+  onUpdate(){
+    this.Humidity.setVal({
+      series:[
+        {
+          name:'湿度',
+          data:this.histories.slice(-7).map(entry => entry.humidity)
+        }
+      ]
+    })
+  }
 
   build(){
     Column() {
@@ -39,38 +51,19 @@ export struct historyH {
           .width(20)
           .height(20)
           .onClick(()=>{
-            this.Humidity.series = [
-              {
-                // @ts-ignore
-                data: this.histories.map(history => history.humidity)
-              }
-            ];
-            console.log('refresh')
+            this.Humidity.setVal({
+              series:[
+                {
+                  name:'湿度',
+                  data:this.histories.slice(-7).map(entry => entry.humidity)
+                }
+              ]
+            })
+            console.log('plant humidity ',this.histories.slice(-7).map(entry => entry.humidity))
           })
       }
       .width('100%')
-      CustomLayout({Humidity:this.Humidity,histories:this.histories}) {
-        McLineChart({ options: this.Humidity })
-      }
+      McLineChart({ options: this.Humidity })
     }.width('100%').height(200).backgroundColor('#FFFFFF').borderRadius(10)
-  }
-}
-@Component
-struct CustomLayout {
-  @BuilderParam builder: () => {};
-  @Link Humidity: Options
-  @Link histories:History[]
-  onLayout(children: Array<LayoutChild>, constraint: ConstraintSizeOptions) {
-    this.Humidity.series = [
-      {
-        // @ts-ignore
-        data: this.histories.map(history => history.humidity)
-      }
-    ];
-    console.log('refresh')
-  }
-
-  build() {
-    this.builder()
   }
 }

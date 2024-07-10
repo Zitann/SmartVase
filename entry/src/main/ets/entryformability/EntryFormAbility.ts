@@ -48,23 +48,20 @@ export default class EntryFormAbility extends FormExtensionAbility {
     onAddForm(want: Want) {
       let formId = want.parameters[formInfo.FormParam.IDENTITY_KEY] as string
       const run = async () => {
-        console.log('jzt1 start')
+        console.log('vase card start')
         await this.login()
-        console.log('jzt2 '+JSON.stringify(this.user))
         await this.getPlantList()
-        console.log('jzt3 '+JSON.stringify(this.plantList))
       }
       run()
       setTimeout(() => {
-        console.log('jzt 5s later',JSON.stringify(this.plantList))
         let formData = {
           plant: this.plantList
         }
         let formInfo = formBindingData.createFormBindingData(formData)
         formProvider.updateForm(formId,formInfo).then(res=>{
-          console.log('jzt ','更新成功');
+          console.log('vase card ','更新成功');
         }).catch(err=>{
-          console.log('jzt ','更新失败');
+          console.log('vase card ','更新失败');
         });
       }, 2000)
       return null
@@ -78,23 +75,20 @@ export default class EntryFormAbility extends FormExtensionAbility {
   onUpdateForm(formId: string) {
     // Called to notify the form provider to update a specified form.
     const run = async () => {
-      console.log('jzt1 start')
+      console.log('vase card start')
       await this.login()
-      console.log('jzt2 '+JSON.stringify(this.user))
       await this.getPlantList()
-      console.log('jzt3 '+JSON.stringify(this.plantList))
     }
     run()
     setTimeout(() => {
-      console.log('jzt 5s later',JSON.stringify(this.plantList))
       let formData = {
         plantList: this.plantList
       }
       let formInfo = formBindingData.createFormBindingData(formData)
       formProvider.updateForm(formId,formInfo).then(res=>{
-        console.log('jzt ','更新成功');
+        console.log('vase card ','更新成功');
       }).catch(err=>{
-        console.log('jzt ','更新失败');
+        console.log('vase card ','更新失败');
       });
     }, 2000)
   }
@@ -106,23 +100,20 @@ export default class EntryFormAbility extends FormExtensionAbility {
   onFormEvent(formId, message) {
     // Called when a specified message event defined by the form provider is triggered.
     const run = async () => {
-      console.log('jzt1 start')
+      console.log('vase card start')
       await this.login()
-      console.log('jzt2 '+JSON.stringify(this.user))
       await this.getPlantList()
-      console.log('jzt3 '+JSON.stringify(this.plantList))
     }
     run()
     setTimeout(() => {
-      console.log('jzt 5s later',JSON.stringify(this.plantList))
       let formData = {
         plantList: this.plantList
       }
       let formInfo = formBindingData.createFormBindingData(formData)
       formProvider.updateForm(formId,formInfo).then(res=>{
-        console.log('jzt ','更新成功');
+        console.log('vase card ','更新成功');
       }).catch(err=>{
-        console.log('jzt ','更新失败');
+        console.log('vase card ','更新失败');
       });
     }, 2000)
   }
@@ -137,7 +128,7 @@ export default class EntryFormAbility extends FormExtensionAbility {
   }
 
   async login() {
-    console.log('jzt login')
+    console.log('vase card login')
     const res = await this.httpRequest.request('http://123.60.145.37:5000/user/login', {
       method: http.RequestMethod.POST,
       extraData: {
@@ -145,17 +136,16 @@ export default class EntryFormAbility extends FormExtensionAbility {
         password: this.passwd.toString()
       }
     })
-    console.log('jzt '+typeof res)
     const { responseCode, result } = res;
     if(responseCode !== 200) {
       return;
     } else {
       let dataObj = JSON.parse(result as string)
       if(dataObj.code == 'SUCCESS') {
-        console.log('jzt success');
-        console.log('jzt '+JSON.stringify(dataObj.data));
+        console.log('vase card success');
+        console.log('vase card '+JSON.stringify(dataObj.data));
         let user = new User(dataObj.data.user.username, dataObj.data.user.phone, dataObj.data.user.avatar, dataObj.data.token);
-        console.log('jzt '+JSON.stringify(user));
+        console.log('vase card user '+JSON.stringify(user));
         this.user = user;
       }
     }
@@ -179,7 +169,7 @@ export default class EntryFormAbility extends FormExtensionAbility {
         for(let plant of dataObj.data){
           this.plantList.push(new PlantData(plant.id,plant.name,plant.description,plant.image,plant.temperature,plant.humidity,plant.luminance))
         }
-        console.info(JSON.stringify(this.plantList))
+        console.info('plant card plantList '+JSON.stringify(this.plantList));
       }
     }
   }

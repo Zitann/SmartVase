@@ -84,7 +84,7 @@ struct Dialog2 {
           }).backgroundColor(0xffffff).fontColor(Color.Black)
         Button('确认')
           .onClick(() => {
-            console.log('jzt '+this.val.replace("MAC ", ""))
+            console.log('plant addPlant '+this.val.replace("MAC ", ""))
             this.ble.Connect(this.val.replace("MAC ", ""))
             this.controller.close()
           }).backgroundColor(0xffffff).fontColor(Color.Red)
