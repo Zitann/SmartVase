@@ -30,7 +30,7 @@ struct Information{
         "Authorization": `Bearer ${this.token}`
       },
       extraData:{
-        "id":this.plantId,
+        "plant_id":this.plantId,
         "command":command
       }
     })
@@ -92,7 +92,7 @@ struct Information{
           this.plant.temperature = this.histories[this.histories.length-1].temperature
           this.plant.humidity = this.histories[this.histories.length-1].humidity
           this.plant.luminance = this.histories[this.histories.length-1].luminance
-          console.log('history'+JSON.stringify(this.histories))
+          console.log('plant history'+JSON.stringify(this.histories))
         }else{
           promptAction.showToast({ message: '获取植物 '+dataObj.message })
         }
@@ -143,7 +143,7 @@ struct Information{
     this.getHistory()
     this.timeId=setInterval(()=>{
       this.getHistory()
-    },5000)
+    },20000)
     console.log(JSON.stringify(this.plant))
   }
 
@@ -231,6 +231,7 @@ struct Information{
               .height(30)
               .margin({ top: '3%',right:'15%' })
               .onClick(() => {
+                console.log('plant '+this.plantId)
                 this.sendCommand('switch')
               })
           }

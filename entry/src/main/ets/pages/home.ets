@@ -34,7 +34,7 @@ struct Home{
           for(let plant of dataObj.data){
             this.plantList.push(new PlantData(plant.id,plant.name,plant.description,plant.image,plant.temperature,plant.humidity,plant.luminance))
           }
-          console.info(JSON.stringify(this.plantList))
+          console.info('plant '+ JSON.stringify(this.plantList))
         }else{
           promptAction.showToast({ message: '获取植物 '+dataObj.message })
         }
