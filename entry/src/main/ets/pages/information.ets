@@ -217,7 +217,7 @@ struct Information{
             } else {
               Button('编辑')
                 .fontSize(15)
-                .width(90)
+                .width(100)
                 .height(30)
                 .margin({ top: '3%',left:'15%' })
                 .onClick(() => {
@@ -225,19 +225,21 @@ struct Information{
                 })
             }
             Blank()
-            Button('图片+')
+            Button('切换屏幕')
               .fontSize(15)
-              .width(90)
+              .width(100)
               .height(30)
               .margin({ top: '3%',right:'15%' })
-
+              .onClick(() => {
+                this.sendCommand('switch')
+              })
           }
           .width('100%')
           .height('5%')
           Row(){
             Row(){
               Image($r('app.media.ic_gallery_create'))
-                .height(20)
+                .height(25)
                 .margin({ top: '3%',left:'15%' })
                 .fillColor(this.isOn?'#007DFF':Color.Gray)
               Toggle({ type: ToggleType.Switch, isOn: false })
@@ -253,10 +255,10 @@ struct Information{
                   }
                 })
                 .height(30)
-                .width(60)
+                .width(70)
                 .margin({ top: '3%'})
             }
-            .width(90)
+            .width(100)
             .height(30)
             .backgroundColor(Color.White)
             .border({ radius: 15})
@@ -264,7 +266,7 @@ struct Information{
             Blank()
             Button('浇水')
               .fontSize(15)
-              .width(90)
+              .width(100)
               .height(30)
               .margin({ top: '3%',right:'15%' })
               .onClick(()=>{
