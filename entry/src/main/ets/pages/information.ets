@@ -169,12 +169,13 @@ struct Information{
   build(){
       Column() {
         Title({ title: '植物信息' })
-        Image($r('app.media.flower'))
+        Image(this.plant.imageUrl == "default.jpg"? $r('app.media.flower') : 'http://123.60.145.37:5000/plant/show/'+this.plant.imageUrl)
           .width('90%')
           .height('15%')
           .objectFit(ImageFit.Cover)
           .border({ radius: 15 })
           .margin({ top: '5%' })
+          .syncLoad(true)
 
         Column() {
           if(this.edit)

@@ -171,11 +171,12 @@ struct AddPlant{
   build() {
     Column(){
       Title({ title: '添加植物' })
-      Image($r('app.media.flower'))
+      Image('http://123.60.145.37:5000/plant/show/zijinghua.jpg')
         .width('90%')
         .margin({ top: '5%' })
         .height('25%')
         .border({ radius: 15 })
+        .syncLoad(true)
       Column() {
         TextInput({ text: this.name,placeholder: '请输入植物名称' })
           .fontSize(20)

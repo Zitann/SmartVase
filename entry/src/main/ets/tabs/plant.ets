@@ -98,33 +98,28 @@ export default struct Plant{
         })
         .width('70%')
     }
-    .backgroundImage(plant.imageUrl == "default.jpg"? $r('app.media.flower') : plant.imageUrl)
+    .backgroundImage(plant.imageUrl == "default.jpg"? $r('app.media.flower') : 'http://123.60.145.37:5000/plant/show/'+plant.imageUrl)
     .backgroundImageSize(ImageSize.Cover)
-    .width('100%')
+    .backgroundImagePosition({y:-110})
+    .width('98%')
     .padding('5%')
-    .height(100)
+    .height(120)
     .justifyContent(FlexAlign.SpaceBetween)
     .borderRadius(12)
     .onClick(()=>{
       router.pushUrl({url:'pages/information',params:{id:plant.id,token:this.token}})
+    })
+    .shadow({
+      radius: 12,
+      color: '#B1B3B5',
+      offsetX: vp2px(5),
+      offsetY: vp2px(5)
     })
   }
 
   // 滑动删除和编辑的布局
   @Builder itemEnd(index:number) {
     Row () {
-      // Button() {
-      //   Image($r("app.media.ic_public_edit_filled"))
-      //     .width('70%')
-      //     .fillColor(Color.White)
-      // }
-      //   .width(40)
-      //   .height(40)
-      //   .margin(4)
-      //   .onClick(()=>{
-      //     console.info('Click Icon')
-      //     router.pushUrl({url:'pages/information',params:{id:this.plants[index].id,token:this.token}})
-      //   })
       Button(){
         Image($r("app.media.ic_public_delete_filled"))
           .width('70%')
