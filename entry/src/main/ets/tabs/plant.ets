@@ -68,11 +68,18 @@ export default struct Plant{
         .position({
           x: '76%', y: '86%'
         })
+        .border({radius:56})
         .onClick(() => {
           router.pushUrl({
             url: 'pages/addPlant',
             params: {token:this.token}
           })
+        })
+        .shadow({
+          radius: 12,
+          color: '#B1B3B5',
+          offsetX: vp2px(5),
+          offsetY: vp2px(5)
         })
     }
     .width('100%')

@@ -6,9 +6,9 @@
         "type": "HarmonyOS",
         "material": {
           "certpath": "C:\\Users\\jzita\\.ohos\\config\\default_SmartVase_z26nTaYHJcj44DyginsssJHKNmkpooEstU1Cxcer3Ac=.cer",
-          "storePassword": "0000001BF9674A178B6E799B70BC98CDEA9817A9BC820AB0E347E813D4876B0F0BA37B04D8F6A2D2567252",
+          "storePassword": "0000001BE25B4CF216598CB98A792DD88B8A4C831A3C20DC1C8B7BD167C07E11FA9FD2C925ED0FEF60E0A1",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BE37843F39AB12E561B4CA03F6E4A1D09827E21A8FE6283DE44EE440F2D29C4AFB5CBFF40DBAC64",
+          "keyPassword": "0000001B3EC912DB100F6A47A2913528AE98AB2B600D35756C4266E04DE0AF3F9BD7FDA85583DDD00EA299",
           "profile": "C:\\Users\\jzita\\.ohos\\config\\default_SmartVase_z26nTaYHJcj44DyginsssJHKNmkpooEstU1Cxcer3Ac=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "C:\\Users\\jzita\\.ohos\\config\\default_SmartVase_z26nTaYHJcj44DyginsssJHKNmkpooEstU1Cxcer3Ac=.p12"

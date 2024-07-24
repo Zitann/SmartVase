@@ -7,7 +7,7 @@ import { historyH } from '../tabs/historyH';
 import {historyI} from  '../tabs/historyI';
 import { History, PlantData } from '../common/Data';
 import http from '@ohos.net.http';
-import UIAbility from '@ohos.app.ability.UIAbility';
+
 @Entry
 @Component
 struct Information{
@@ -18,9 +18,12 @@ struct Information{
   @State plant :PlantData = new PlantData()
   @State histories:History[] = []
   @State isOn:boolean = false
+  @State warning:boolean = false
+  @State alpha:number = 0.1
   token = ''
   plantId=''
   timeId = 0
+  state = 0.1
 
   sendCommand(command:string){
     this.httpRequest.request(`http://123.60.145.37:5000/podcast/send`,{
@@ -58,6 +61,18 @@ struct Information{
           }
           if(this.description == ''){
             this.description = this.plant.description
+          }
+          if (this.plant.name == '月季'){
+            this.warning = true
+            setInterval(()=>{
+              this.alpha = this.alpha + this.state
+              if(this.alpha >= 0.9){
+                this.state = -0.1
+              }
+              if(this.alpha <= 0.1){
+                this.state = 0.1
+              }
+            },100)
           }
         }else{
           promptAction.showToast({ message: '获取植物 '+dataObj.message })
@@ -167,8 +182,19 @@ struct Information{
   }
 
   build(){
+    Scroll() {
       Column() {
         Title({ title: '植物信息' })
+        if (this.warning) {
+          Text('警告：当前环境可能不适合植物生长')
+            .fontSize(15)
+            .fontColor(Color.Red)
+            .margin({ top: '5%' })
+            .opacity(this.alpha)
+            .onClick(()=>{
+              this.warning = false
+            })
+        }
         Image(this.plant.imageUrl == "default.jpg"? $r('app.media.flower') : 'http://123.60.145.37:5000/plant/show/'+this.plant.imageUrl)
           .width('90%')
           .height('15%')
@@ -414,9 +440,8 @@ struct Information{
         .alignItems(HorizontalAlign.End)
       }
       .width('100%')
-      .height('100%')
       .backgroundColor('#F1F3F5')
-      .justifyContent(FlexAlign.Start)
+      .justifyContent(FlexAlign.Start)}
   }
 
 }

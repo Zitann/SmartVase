@@ -1,7 +1,6 @@
 import router from '@ohos.router';
 import dataPreferences from '@ohos.data.preferences';
 import { User } from '../common/Data';
-import promptAction from '@ohos.promptAction';
 
 @Entry
 @Component
