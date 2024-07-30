@@ -5,21 +5,21 @@
 2024物联网大赛前端
 
   <p align="center">
-    <img src="https://github.com/Narrao/SmartVase/blob/main/entry/src/main/resources/base/media/icon.png?raw=true" style="width:120px;height:120px;">
+    <img src="https://github.com/Zitann/SmartVase/blob/main/entry/src/main/resources/base/media/icon.png?raw=true" style="width:120px;height:120px;">
   </p>
 
   <h2 align="center">云瓶</h2>
   <p align="center">
     开始你的绿色之旅！
     <br />
-    <a href="https://github.com/Narrao/SmartVase"><strong>探索本项目的文档 »</strong></a>
+    <a href="https://github.com/Zitann/SmartVase"><strong>探索本项目的文档 »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/Narrao/SmartVase">查看项目</a>
+    <a href="https://github.com/Zitann/SmartVase">查看项目</a>
     ·
-    <a href="https://github.com/Narrao/SmartVase/issues">报告Bug</a>
+    <a href="https://github.com/Zitann/SmartVase/issues">报告Bug</a>
     ·
-    <a href="https://github.com/Narrao/SmartVase/issues">提出新特性</a>
+    <a href="https://github.com/Zitann/SmartVase/issues">提出新特性</a>
   </p>
   
 ## 目录
@@ -39,7 +39,7 @@
 4. 克隆本仓库
 
 ```sh
-git clone https://github.com/Narrao/SmartVase.git
+git clone https://github.com/Zitann/SmartVase.git
 ```
 
 ### 主要文件目录说明
@@ -88,5 +88,5 @@ entry
 
 ### 作者
 
-- [Narrao (Jiang Zitan)](https://github.com/Narrao)
+- [Zitann (Jiang Zitan)](https://github.com/Zitann)
 - [DoctorFishbo (Feng) ](https://github.com/DoctorFishbo)
